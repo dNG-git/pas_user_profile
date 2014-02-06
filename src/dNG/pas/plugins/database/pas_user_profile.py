@@ -2,7 +2,7 @@
 ##j## BOF
 
 """
-dNG.pas.plugins.database.user_profile
+dNG.pas.plugins.database.pas_user_profile
 """
 """n// NOTE
 ----------------------------------------------------------------------------
@@ -37,7 +37,7 @@ Load and register all SQLAlchemy objects to generate database tables.
 :since: v0.1.00
 	"""
 
-	NamedLoader.get_instance("dNG.pas.data.user.Profile")
+	NamedLoader.get_instance("dNG.pas.database.instances.UserProfile")
 #
 
 def plugin_deregistration():
@@ -48,10 +48,10 @@ Unregister plugin hooks.
 :since: v0.1.00
 	"""
 
-	Hooks.unregister("dNG.pas.database.load_all", plugin_db_load_all)
+	Hooks.unregister("dNG.pas.Database.loadAll", plugin_db_load_all)
 #
 
-def plugin_registration ():
+def plugin_registration():
 #
 	"""
 Register plugin hooks.
@@ -59,7 +59,7 @@ Register plugin hooks.
 :since: v0.1.00
 	"""
 
-	Hooks.register("dNG.pas.database.load_all", plugin_db_load_all)
+	Hooks.register("dNG.pas.Database.loadAll", plugin_db_load_all)
 #
 
 ##j## EOF
