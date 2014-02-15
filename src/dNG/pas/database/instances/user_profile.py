@@ -32,6 +32,20 @@ from .abstract import Abstract
 
 class UserProfile(Abstract):
 #
+	"""
+SQLAlchemy database instance for Profile.
+
+:author:     direct Netware Group
+:copyright:  (C) direct Netware Group - All rights reserved
+:package:    pas
+:subpackage: user_profile
+:since:      v0.1.00
+:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
+             Mozilla Public License, v. 2.0
+	"""
+
+	# pylint: disable=invalid-name
+
 	__tablename__ = "{0}_user_profile".format(Abstract.get_table_prefix())
 	"""
 SQLAlchemy table name

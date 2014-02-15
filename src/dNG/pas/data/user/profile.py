@@ -31,6 +31,19 @@ from dNG.pas.runtime.value_exception import ValueException
 
 class Profile(Instance):
 #
+	"""
+"Profile" contains user specific data used for the Python Application
+Services. Logging in and additional details may come from external sources.
+
+:author:     direct Netware Group
+:copyright:  direct Netware Group - All rights reserved
+:package:    pas
+:subpackage: user_profile
+:since:      v0.1.00
+:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
+             Mozilla Public License, v. 2.0
+	"""
+
 	TYPE_ADMINISTRATOR = 4
 	"""
 Profile identifies an administrator
@@ -186,6 +199,14 @@ Parses the given type parameter given as a string value.
 
 		return _return
 	#
+
+	load = Instance._wrap_loader(_DbUserProfile)
+	"""
+Load Profile instance by the given criteria (AND condition is used).
+
+:return: (object) Profile instance on success
+:since:  v0.1.00
+	"""
 
 	@staticmethod
 	def load_id(_id):
