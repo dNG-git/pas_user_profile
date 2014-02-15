@@ -211,6 +211,15 @@ Load Profile instance by the given criteria (AND condition is used).
 	@staticmethod
 	def load_id(_id):
 	#
+		"""
+Load Profile instance by ID.
+
+:param _id: Profile ID
+
+:return: (object) Profile instance on success
+:since:  v0.1.00
+		"""
+
 		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).filter(_DbUserProfile.id == _id).first()
 		if (db_instance == None): raise ValueException("Profile ID '{0}' is invalid".format(_id))
 		return Profile(db_instance)
@@ -219,6 +228,15 @@ Load Profile instance by the given criteria (AND condition is used).
 	@staticmethod
 	def load_username(username):
 	#
+		"""
+Load Profile instance by user name.
+
+:param _id: Profile user name
+
+:return: (object) Profile instance on success
+:since:  v0.1.00
+		"""
+
 		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).filter(_DbUserProfile.name == username).first()
 		if (db_instance == None): raise ValueException("Profile user name '{0}' is invalid".format(username))
 		return Profile(db_instance)
