@@ -120,9 +120,17 @@ Sets values given as keyword arguments to this method.
 
 	get_id = Instance._wrap_getter("id")
 	"""
-Returns the ID of this instance.
+Returns the ID for this profile.
 
 :return: (str) Profile ID; None if undefined
+:since:  v0.1.00
+	"""
+
+	get_lang = Instance._wrap_getter("lang")
+	"""
+Returns the language for this profile.
+
+:return: (str) Profile language; None if undefined
 :since:  v0.1.00
 	"""
 
