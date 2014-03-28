@@ -217,6 +217,23 @@ Load Profile instance by the given criteria (AND condition is used).
 	"""
 
 	@staticmethod
+	def load_email(email):
+	#
+		"""
+Load Profile instance by user name.
+
+:param _id: Profile user name
+
+:return: (object) Profile instance on success
+:since:  v0.1.00
+		"""
+
+		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).filter(_DbUserProfile.email == email).first()
+		if (db_instance == None): raise ValueException("Profile e-mail '{0}' is invalid".format(email))
+		return Profile(db_instance)
+	#
+
+	@staticmethod
 	def load_id(_id):
 	#
 		"""
