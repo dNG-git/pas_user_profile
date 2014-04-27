@@ -28,8 +28,9 @@ from dNG.pas.database.connection import Connection
 from dNG.pas.database.instance import Instance
 from dNG.pas.database.instances.user_profile import UserProfile as _DbUserProfile
 from dNG.pas.runtime.value_exception import ValueException
+from .abstract_profile import AbstractProfile
 
-class Profile(Instance):
+class Profile(Instance, AbstractProfile):
 #
 	"""
 "Profile" contains user specific data used for the Python Application
@@ -44,23 +45,6 @@ Services. Logging in and additional details may come from external sources.
              Mozilla Public License, v. 2.0
 	"""
 
-	TYPE_ADMINISTRATOR = 4
-	"""
-Profile identifies an administrator
-	"""
-	TYPE_EXTERNAL_VERIFIED_MEMBER = 1
-	"""
-Profile identifies an external verified member
-	"""
-	TYPE_MEMBER = 2
-	"""
-Profile identifies a member
-	"""
-	TYPE_MODERATOR = 3
-	"""
-Profile identifies a member with moderation rights
-	"""
-
 	def __init__(self, db_instance = None):
 	#
 		"""
@@ -70,6 +54,8 @@ Constructor __init__(Profile)
 		"""
 
 		if (db_instance == None): db_instance = _DbUserProfile()
+
+		AbstractProfile.__init__(self)
 		Instance.__init__(self, db_instance)
 
 		self.db_id = (None if (db_instance == None) else db_instance.id)
@@ -117,22 +103,6 @@ Sets values given as keyword arguments to this method.
 			if ("timezone" in kwargs): self.local.db_instance.timezone = kwargs['timezone']
 		#
 	#
-
-	get_id = Instance._wrap_getter("id")
-	"""
-Returns the ID for this profile.
-
-:return: (str) Profile ID; None if undefined
-:since:  v0.1.00
-	"""
-
-	get_lang = Instance._wrap_getter("lang")
-	"""
-Returns the language for this profile.
-
-:return: (str) Profile language; None if undefined
-:since:  v0.1.00
-	"""
 
 	def is_reloadable(self):
 	#
@@ -186,26 +156,6 @@ Checks if the user is valid (not banned, deleted or locked).
 
 		profile_data = self.data_get("banned", "deleted", "locked")
 		return (False if (profile_data['banned'] or profile_data['deleted'] or profile_data['locked']) else True)
-	#
-
-	@staticmethod
-	def get_type(_type):
-	#
-		"""
-Parses the given type parameter given as a string value.
-
-:param _type: String type
-
-:return: (int) Internal type
-:since:  v0.1.00
-		"""
-
-		if (_type == "ad"): _return = Profile.TYPE_ADMINISTRATOR
-		elif (_type == "me"): _return = Profile.TYPE_MEMBER
-		elif (_type == "mo"): _return = Profile.TYPE_MODERATOR
-		else: _return = 0
-
-		return _return
 	#
 
 	load = Instance._wrap_loader(_DbUserProfile)

@@ -23,7 +23,7 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 NOTE_END //n"""
 
-from sqlalchemy import BIGINT, CHAR, Column, INT, REAL, SMALLINT, TEXT, VARCHAR
+from sqlalchemy import BIGINT, BOOLEAN, CHAR, Column, INT, REAL, TEXT, VARCHAR
 #from sqlalchemy.orm import relationship
 from time import time
 from uuid import uuid4 as uuid
@@ -63,15 +63,15 @@ user_profile.type
 	"""
 user_profile.type_ex
 	"""
-	banned = Column(SMALLINT, server_default = "0", nullable = False)
+	banned = Column(BOOLEAN, server_default = "0", nullable = False)
 	"""
 user_profile.banned
 	"""
-	deleted = Column(SMALLINT, server_default = "0", nullable = False)
+	deleted = Column(BOOLEAN, server_default = "0", nullable = False)
 	"""
 user_profile.deleted
 	"""
-	locked = Column(SMALLINT, server_default = "1", nullable = False)
+	locked = Column(BOOLEAN, server_default = "1", nullable = False)
 	"""
 user_profile.locked
 	"""
@@ -95,7 +95,7 @@ user_profile.theme
 	"""
 user_profile.email
 	"""
-	email_public = Column(SMALLINT, server_default = "0", nullable = False)
+	email_public = Column(BOOLEAN, server_default = "0", nullable = False)
 	"""
 user_profile.email_public
 	"""
