@@ -23,11 +23,12 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 NOTE_END //n"""
 
-from sqlalchemy import BIGINT, BOOLEAN, CHAR, Column, INT, REAL, TEXT, VARCHAR
+from sqlalchemy import BOOLEAN, CHAR, Column, INT, REAL, TEXT, SMALLINT, VARCHAR
 #from sqlalchemy.orm import relationship
 from time import time
 from uuid import uuid4 as uuid
 
+from dNG.pas.database.types.date_time import DateTime
 from .abstract import Abstract
 
 class UserProfile(Abstract):
@@ -83,6 +84,10 @@ user_profile.name
 	"""
 user_profile.password
 	"""
+	password_missed = Column(SMALLINT, server_default = "0", nullable = False)
+	"""
+user_profile.password_missed
+	"""
 	lang = Column(VARCHAR(20), server_default = "", nullable = False)
 	"""
 user_profile.lang
@@ -119,7 +124,7 @@ user_profile.signature
 	"""
 user_profile.registration_ip
 	"""
-	registration_time = Column(BIGINT, server_default = "0", nullable = False)
+	registration_time = Column(DateTime, default = 0, nullable = False)
 	"""
 user_profile.registration_time
 	"""
@@ -131,7 +136,7 @@ user_profile.secid
 	"""
 user_profile.lastvisit_ip
 	"""
-	lastvisit_time = Column(BIGINT, server_default = "0", nullable = False)
+	lastvisit_time = Column(DateTime, default = 0, nullable = False)
 	"""
 user_profile.lastvisit_time
 	"""

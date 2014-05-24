@@ -26,8 +26,8 @@ NOTE_END //n"""
 from dNG.pas.data.binary import Binary
 from dNG.pas.database.connection import Connection
 from dNG.pas.database.instance import Instance
+from dNG.pas.database.nothing_matched_exception import NothingMatchedException
 from dNG.pas.database.instances.user_profile import UserProfile as _DbUserProfile
-from dNG.pas.runtime.value_exception import ValueException
 from .abstract_profile import AbstractProfile
 
 class Profile(Instance, AbstractProfile):
@@ -62,9 +62,75 @@ Constructor __init__(Profile)
 		"""
 Database ID used for reloading
 		"""
+
+		self.supported_features['password_missed'] = True
 	#
 
-	def data_set(self, **kwargs):
+	def is_reloadable(self):
+	#
+		"""
+Returns true if the instance can be reloaded automatically in another
+thread.
+
+:return: (bool) True if reloadable
+:since:  v0.1.00
+		"""
+
+		_return = True
+
+		if (self.db_id == None):
+		# Thread safety
+			with self._lock: _return = (self.db_id != None)
+		#
+
+		return _return
+	#
+
+	def is_type(self, _type):
+	#
+		"""
+Checks if the user type is the given one.
+
+:param _type: User type to be checked
+
+:return: (bool) True if the user type is the given one
+:since:  v0.1.00
+		"""
+
+		with self:
+		#
+			if (type(_type) != int): _type = self.__class__.get_type(_type)
+			return (self.local.db_instance.type == _type)
+		#
+	#
+
+	def is_valid(self):
+	#
+		"""
+Checks if the user is valid (not banned, deleted or locked).
+
+:param _type: User type to be checked
+
+:return: (bool) True if the user type is the given one
+:since:  v0.1.00
+		"""
+
+		profile_data = self.get_data_attributes("banned", "deleted", "locked")
+		return (False if (profile_data['banned'] or profile_data['deleted'] or profile_data['locked']) else True)
+	#
+
+	def lock(self):
+	#
+		"""
+Locks a user profile.
+
+:since: v0.1.00
+		"""
+
+		self.set_data_attributes(locked = True)
+	#
+
+	def set_data_attributes(self, **kwargs):
 	#
 		"""
 Sets values given as keyword arguments to this method.
@@ -104,58 +170,15 @@ Sets values given as keyword arguments to this method.
 		#
 	#
 
-	def is_reloadable(self):
+	def unlock(self):
 	#
 		"""
-Returns true if the instance can be reloaded automatically in another
-thread.
+Unlocks a user profile.
 
-:return: (bool) True if reloadable
-:since:  v0.1.00
+:since: v0.1.00
 		"""
 
-		_return = True
-
-		if (self.db_id == None):
-		#
-			# Value could be set in another thread so check again
-			with self.lock: _return = (self.db_id != None)
-		#
-
-		return _return
-	#
-
-	def is_type(self, _type):
-	#
-		"""
-Checks if the user type is the given one.
-
-:param _type: User type to be checked
-
-:return: (bool) True if the user type is the given one
-:since:  v0.1.00
-		"""
-
-		with self:
-		#
-			if (type(_type) != int): _type = self.__class__.get_type(_type)
-			return (self.local.db_instance.type == _type)
-		#
-	#
-
-	def is_valid(self):
-	#
-		"""
-Checks if the user is valid (not banned, deleted or locked).
-
-:param _type: User type to be checked
-
-:return: (bool) True if the user type is the given one
-:since:  v0.1.00
-		"""
-
-		profile_data = self.data_get("banned", "deleted", "locked")
-		return (False if (profile_data['banned'] or profile_data['deleted'] or profile_data['locked']) else True)
+		self.set_data_attributes(locked = False)
 	#
 
 	load = Instance._wrap_loader(_DbUserProfile)
@@ -167,19 +190,27 @@ Load Profile instance by the given criteria (AND condition is used).
 	"""
 
 	@staticmethod
-	def load_email(email):
+	def load_email(email, insensitive = False):
 	#
 		"""
-Load Profile instance by user name.
+Load Profile instance by an e-mail address.
 
-:param _id: Profile user name
+:param email: Profile's e-mail address
+:param insensitive: Search case-insensitive for the given value
 
 :return: (object) Profile instance on success
 :since:  v0.1.00
 		"""
 
-		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).filter(_DbUserProfile.email == email).first()
-		if (db_instance == None): raise ValueException("Profile e-mail '{0}' is invalid".format(email))
+		with Connection.get_instance() as database:
+		#
+			db_instance = (database.query(_DbUserProfile).filter(_DbUserProfile.email.ilike(email)).first()
+			               if (insensitive) else
+			               database.query(_DbUserProfile).filter(_DbUserProfile.email == email).first()
+			              )
+		#
+
+		if (db_instance == None): raise NothingMatchedException("Profile e-mail '{0}' is invalid".format(email))
 		return Profile(db_instance)
 	#
 
@@ -196,24 +227,32 @@ Load Profile instance by ID.
 		"""
 
 		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).filter(_DbUserProfile.id == _id).first()
-		if (db_instance == None): raise ValueException("Profile ID '{0}' is invalid".format(_id))
+		if (db_instance == None): raise NothingMatchedException("Profile ID '{0}' is invalid".format(_id))
 		return Profile(db_instance)
 	#
 
 	@staticmethod
-	def load_username(username):
+	def load_username(username, insensitive = False):
 	#
 		"""
 Load Profile instance by user name.
 
-:param _id: Profile user name
+:param username: Profile's user name
+:param insensitive: Search case-insensitive for the given value
 
 :return: (object) Profile instance on success
 :since:  v0.1.00
 		"""
 
-		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).filter(_DbUserProfile.name == username).first()
-		if (db_instance == None): raise ValueException("Profile user name '{0}' is invalid".format(username))
+		with Connection.get_instance() as database:
+		#
+			db_instance = (database.query(_DbUserProfile).filter(_DbUserProfile.name.ilike(username)).first()
+			               if (insensitive) else
+			               database.query(_DbUserProfile).filter(_DbUserProfile.name == username).first()
+			              )
+		#
+
+		if (db_instance == None): raise NothingMatchedException("Profile user name '{0}' is invalid".format(username))
 		return Profile(db_instance)
 	#
 #

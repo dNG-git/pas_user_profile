@@ -23,9 +23,13 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 NOTE_END //n"""
 
+from random import randrange
+
+from dNG.pas.data.settings import Settings
+from dNG.pas.data.supports_mixin import SupportsMixin
 from dNG.pas.runtime.not_implemented_exception import NotImplementedException
 
-class AbstractProfile(object):
+class AbstractProfile(SupportsMixin):
 #
 	"""
 "AbstractProfile" contains abstract user specific data used for the Python
@@ -39,6 +43,8 @@ Application Services.
 :license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
+
+	# pylint: disable=unused-argument
 
 	TYPE_ADMINISTRATOR = 4
 	"""
@@ -61,18 +67,7 @@ Profile identifies a member
 Profile identifies a member with moderation rights
 	"""
 
-	def data_get(self, *args):
-	#
-		"""
-Sets values given as keyword arguments to this method.
-
-:since: v0.1.00
-		"""
-
-		raise NotImplementedException()
-	#
-
-	def data_set(self, **kwargs):
+	def get_data_attributes(self, *args):
 	#
 		"""
 Sets values given as keyword arguments to this method.
@@ -92,7 +87,7 @@ Returns the ID for this profile.
 :since:  v0.1.00
 		"""
 
-		return self.data_get("id")['id']
+		return self.get_data_attributes("id")['id']
 	#
 
 	def get_lang(self):
@@ -104,7 +99,7 @@ Returns the language for this profile.
 :since:  v0.1.00
 		"""
 
-		return self.data_get("lang")['lang']
+		return self.get_data_attributes("lang")['lang']
 	#
 
 	def is_type(self, _type):
@@ -133,6 +128,68 @@ Checks if the user is valid.
 		return False
 	#
 
+	def lock(self):
+	#
+		"""
+Locks a user profile.
+
+:since: v0.1.00
+		"""
+
+		raise NotImplementedException()
+	#
+
+	def set_data_attributes(self, **kwargs):
+	#
+		"""
+Sets values given as keyword arguments to this method.
+
+:since: v0.1.00
+		"""
+
+		raise NotImplementedException()
+	#
+
+	def unlock(self):
+	#
+		"""
+Unlocks a user profile.
+
+:since: v0.1.00
+		"""
+
+		raise NotImplementedException()
+	#
+
+	@staticmethod
+	def generate_secid():
+	#
+		"""
+Generates an "Security ID string" usually used to change the e-mail address
+or log-in without the user password.
+
+:return: (str) Security ID string
+:since:  v0.1.00
+		"""
+
+		return " ".join(AbstractProfile._generate_secid_value())
+	#
+
+	@staticmethod
+	def _generate_secid_value():
+	#
+		"""
+Generates a list of "Security ID string elements" usually joined and saved
+in a hashed form in a database.
+
+:return: (generator) Security ID string element generator
+:since:  v0.1.00
+		"""
+
+		elements = int(Settings.get("pas_user_profile_secid_elements", 10))
+		for i in range(0, elements): yield "{0}{1:0>3d}".format(chr(randrange(65, 71)), randrange(1, 1000))
+	#
+
 	@staticmethod
 	def get_type(_type):
 	#
@@ -154,12 +211,13 @@ Parses the given type parameter given as a string value.
 	#
 
 	@staticmethod
-	def load_email(email):
+	def load_email(email, insensitive = False):
 	#
 		"""
-Load Profile instance by user name.
+Load Profile instance by an e-mail address.
 
-:param _id: Profile user name
+:param email: Profile's e-mail address
+:param insensitive: Search case-insensitive for the given value
 
 :return: (object) Profile instance on success
 :since:  v0.1.00
@@ -184,12 +242,13 @@ Load Profile instance by ID.
 	#
 
 	@staticmethod
-	def load_username(username):
+	def load_username(username, insensitive = False):
 	#
 		"""
 Load Profile instance by user name.
 
-:param _id: Profile user name
+:param username: Profile's user name
+:param insensitive: Search case-insensitive for the given value
 
 :return: (object) Profile instance on success
 :since:  v0.1.00

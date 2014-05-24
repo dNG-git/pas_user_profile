@@ -2,7 +2,7 @@
 ##j## BOF
 
 """
-dNG.pas.plugins.database.pas_user_profile
+dNG.pas.plugins.tasks.pas_user_profile
 """
 """n// NOTE
 ----------------------------------------------------------------------------
@@ -25,13 +25,15 @@ NOTE_END //n"""
 
 # pylint: disable=unused-argument
 
+from dNG.pas.database.nothing_matched_exception import NothingMatchedException
 from dNG.pas.module.named_loader import NamedLoader
 from dNG.pas.plugins.hook import Hook
+from dNG.pas.runtime.value_exception import ValueException
 
-def load_all(params, last_return = None):
+def delete(params, last_return = None):
 #
 	"""
-Load and register all SQLAlchemy objects to generate database tables.
+Called for "dNG.pas.user.Profile.delete"
 
 :param params: Parameter specified
 :param last_return: The return value from the last hook called.
@@ -40,19 +42,22 @@ Load and register all SQLAlchemy objects to generate database tables.
 :since:  v0.1.00
 	"""
 
-	NamedLoader.get_instance("dNG.pas.database.instances.UserProfile")
+	# pylint: disable=star-args
+
+	if ("username" not in params): raise ValueException("Missing required arguments")
+	else:
+	#
+		user_profile_class = NamedLoader.get_class("dNG.pas.data.user.Profile")
+
+		try:
+		#
+			user_profile = user_profile_class.load_username(params['username'])
+			user_profile.delete()
+		#
+		except NothingMatchedException: pass
+	#
+
 	return last_return
-#
-
-def register_plugin():
-#
-	"""
-Register plugin hooks.
-
-:since: v0.1.00
-	"""
-
-	Hook.register("dNG.pas.Database.loadAll", load_all)
 #
 
 def unregister_plugin():
@@ -63,7 +68,18 @@ Unregister plugin hooks.
 :since: v0.1.00
 	"""
 
-	Hook.unregister("dNG.pas.Database.loadAll", load_all)
+	Hook.unregister("dNG.pas.user.Profile.delete", delete)
+#
+
+def register_plugin():
+#
+	"""
+Register plugin hooks.
+
+:since: v0.1.00
+	"""
+
+	Hook.register("dNG.pas.user.Profile.delete", delete)
 #
 
 ##j## EOF
