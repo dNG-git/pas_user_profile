@@ -181,14 +181,6 @@ Unlocks a user profile.
 		self.set_data_attributes(locked = False)
 	#
 
-	load = Instance._wrap_loader(_DbUserProfile)
-	"""
-Load Profile instance by the given criteria (AND condition is used).
-
-:return: (object) Profile instance on success
-:since:  v0.1.00
-	"""
-
 	@staticmethod
 	def load_email(email, insensitive = False):
 	#

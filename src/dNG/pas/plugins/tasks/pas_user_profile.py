@@ -44,7 +44,7 @@ Called for "dNG.pas.user.Profile.delete"
 
 	# pylint: disable=star-args
 
-	if ("username" not in params): raise ValueException("Missing required arguments")
+	if ("username" not in params): raise ValueException("Missing required argument")
 	else:
 	#
 		user_profile_class = NamedLoader.get_class("dNG.pas.data.user.Profile")
