@@ -2,10 +2,6 @@
 ##j## BOF
 
 """
-dNG.pas.data.user.Profile
-"""
-"""n// NOTE
-----------------------------------------------------------------------------
 direct PAS
 Python Application Services
 ----------------------------------------------------------------------------
@@ -20,8 +16,7 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(pasUserProfileVersion)#
 #echo(__FILEPATH__)#
-----------------------------------------------------------------------------
-NOTE_END //n"""
+"""
 
 from dNG.pas.data.binary import Binary
 from dNG.pas.database.connection import Connection

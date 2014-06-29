@@ -2,10 +2,6 @@
 ##j## BOF
 
 """
-dNG.pas.data.user.AbstractProfile
-"""
-"""n// NOTE
-----------------------------------------------------------------------------
 direct PAS
 Python Application Services
 ----------------------------------------------------------------------------
@@ -20,8 +16,7 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(pasUserProfileVersion)#
 #echo(__FILEPATH__)#
-----------------------------------------------------------------------------
-NOTE_END //n"""
+"""
 
 from random import randrange
 
@@ -187,7 +182,7 @@ in a hashed form in a database.
 		"""
 
 		elements = int(Settings.get("pas_user_profile_secid_elements", 10))
-		for i in range(0, elements): yield "{0}{1:0>3d}".format(chr(randrange(65, 71)), randrange(1, 1000))
+		for _ in range(0, elements): yield "{0}{1:0>3d}".format(chr(randrange(65, 71)), randrange(1, 1000))
 	#
 
 	@staticmethod

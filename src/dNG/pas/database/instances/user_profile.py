@@ -2,10 +2,6 @@
 ##j## BOF
 
 """
-dNG.pas.database.instances.UserProfile
-"""
-"""n// NOTE
-----------------------------------------------------------------------------
 direct PAS
 Python Application Services
 ----------------------------------------------------------------------------
@@ -20,11 +16,10 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(pasUserProfileVersion)#
 #echo(__FILEPATH__)#
-----------------------------------------------------------------------------
-NOTE_END //n"""
+"""
 
-from sqlalchemy import BOOLEAN, CHAR, Column, INT, REAL, TEXT, SMALLINT, VARCHAR
-#from sqlalchemy.orm import relationship
+from sqlalchemy.schema import Column
+from sqlalchemy.types import BOOLEAN, CHAR, INT, REAL, TEXT, SMALLINT, VARCHAR
 from time import time
 from uuid import uuid4 as uuid
 
