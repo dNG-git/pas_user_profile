@@ -47,23 +47,14 @@ Called for "dNG.pas.user.Profile.delete"
 		try:
 		#
 			user_profile = user_profile_class.load_username(params['username'])
+
+			Hook.call("dNG.pas.user.Profile.onDelete", user_profile = user_profile)
 			user_profile.delete()
 		#
 		except NothingMatchedException: pass
 	#
 
 	return last_return
-#
-
-def unregister_plugin():
-#
-	"""
-Unregister plugin hooks.
-
-:since: v0.1.00
-	"""
-
-	Hook.unregister("dNG.pas.user.Profile.delete", delete)
 #
 
 def register_plugin():
@@ -75,6 +66,17 @@ Register plugin hooks.
 	"""
 
 	Hook.register("dNG.pas.user.Profile.delete", delete)
+#
+
+def unregister_plugin():
+#
+	"""
+Unregister plugin hooks.
+
+:since: v0.1.00
+	"""
+
+	Hook.unregister("dNG.pas.user.Profile.delete", delete)
 #
 
 ##j## EOF

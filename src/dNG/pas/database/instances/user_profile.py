@@ -46,6 +46,14 @@ SQLAlchemy database instance for Profile.
 	"""
 SQLAlchemy table name
 	"""
+	db_instance_class = "dNG.pas.data.user.Profile"
+	"""
+Encapsulating SQLAlchemy database instance class name
+	"""
+	db_schema_version = 1
+	"""
+Database schema version
+	"""
 
 	id = Column(VARCHAR(32), primary_key = True)
 	"""

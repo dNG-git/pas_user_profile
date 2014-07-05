@@ -213,9 +213,40 @@ Load Profile instance by ID.
 :since:  v0.1.00
 		"""
 
-		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).filter(_DbUserProfile.id == _id).first()
+		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).get(_id)
 		if (db_instance == None): raise NothingMatchedException("Profile ID '{0}' is invalid".format(_id))
 		return Profile(db_instance)
+	#
+
+	@staticmethod
+	def load_list(offset = 0, limit = -1, _type = None):
+	#
+		"""
+Load list of valid user profiles sorted by registration time.
+
+:param offset: SQLAlchemy query offset
+:param limit: SQLAlchemy query limit
+:param _type: User type to be checked
+
+:return: (list) Profile instance on success
+:since:  v0.1.00
+		"""
+
+		with Connection.get_instance() as database:
+		#
+			db_query = database.query(_DbUserProfile).filter(_DbUserProfile.deleted != True)
+
+			if (_type != None):
+			#
+				if (type(_type) != int): _type = Profile.get_type(_type)
+				db_query = db_query.filter(_DbUserProfile.type == _type)
+			#
+
+			if (offset > 0): db_query = db_query.offset(offset)
+			if (limit > 0): db_query = db_query.limit(limit)
+
+			return Profile.buffered_iterator(_DbUserProfile, database.execute(db_query), Profile)
+		#
 	#
 
 	@staticmethod
