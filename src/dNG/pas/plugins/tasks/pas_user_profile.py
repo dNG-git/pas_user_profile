@@ -48,7 +48,7 @@ Called for "dNG.pas.user.Profile.delete"
 		#
 			user_profile = user_profile_class.load_username(params['username'])
 
-			Hook.call("dNG.pas.user.Profile.onDelete", user_profile = user_profile)
+			Hook.call("dNG.pas.user.Profile.onDelete", user_profile_id = user_profile.get_id())
 			user_profile.delete()
 		#
 		except NothingMatchedException: pass
