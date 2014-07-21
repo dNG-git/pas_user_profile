@@ -97,6 +97,20 @@ Returns the language for this profile.
 		return self.get_data_attributes("lang")['lang']
 	#
 
+	def is_password_valid(self, password):
+	#
+		"""
+Checks if the password is correct.
+
+:param password: User profile password
+
+:return: (bool) True if valid
+:since:  v0.1.00
+		"""
+
+		raise NotImplementedException()
+	#
+
 	def is_type(self, _type):
 	#
 		"""
@@ -138,6 +152,19 @@ Locks a user profile.
 	#
 		"""
 Sets values given as keyword arguments to this method.
+
+:since: v0.1.00
+		"""
+
+		raise NotImplementedException()
+	#
+
+	def set_password(self, password):
+	#
+		"""
+Sets the profile password.
+
+:param password: User profile password
 
 :since: v0.1.00
 		"""

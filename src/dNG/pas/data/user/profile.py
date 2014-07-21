@@ -19,10 +19,13 @@ http://www.direct-netware.de/redirect.py?licenses;mpl2
 """
 
 from dNG.pas.data.binary import Binary
+from dNG.pas.data.settings import Settings
+from dNG.pas.data.text.tmd5 import Tmd5
 from dNG.pas.database.connection import Connection
 from dNG.pas.database.instance import Instance
 from dNG.pas.database.nothing_matched_exception import NothingMatchedException
 from dNG.pas.database.instances.user_profile import UserProfile as _DbUserProfile
+from dNG.pas.runtime.value_exception import ValueException
 from .abstract_profile import AbstractProfile
 
 class Profile(Instance, AbstractProfile):
@@ -59,6 +62,30 @@ Database ID used for reloading
 		"""
 
 		self.supported_features['password_missed'] = True
+	#
+
+	def is_password_valid(self, password):
+	#
+		"""
+Checks if the password is correct.
+
+:param password: User profile password
+
+:return: (bool) True if valid
+:since:  v0.1.00
+		"""
+
+		salt = Settings.get("pas_user_profile_password_salt")
+		if (salt == None): raise ValueException("User profile password salt is not defined")
+
+		with self:
+		#
+			hashed_password = Tmd5.password_hash(password, Settings.get("pas_user_profile_password_salt"), self.local.db_instance.name)
+
+			return (hashed_password == self.local.db_instance.password
+			        and self.local.db_instance.type_ex == ""
+			       )
+		#
 	#
 
 	def is_reloadable(self):
@@ -162,6 +189,26 @@ Sets values given as keyword arguments to this method.
 			if ("lastvisit_time" in kwargs): self.local.db_instance.lastvisit_time = int(kwargs['lastvisit_time'])
 			if ("rating" in kwargs): self.local.db_instance.rating = kwargs['rating']
 			if ("timezone" in kwargs): self.local.db_instance.timezone = kwargs['timezone']
+		#
+	#
+
+	def set_password(self, password):
+	#
+		"""
+Sets the profile password.
+
+:param password: User profile password
+
+:since: v0.1.00
+		"""
+
+		salt = Settings.get("pas_user_profile_password_salt")
+		if (salt == None): raise ValueException("User profile password salt is not defined")
+
+		with self:
+		#
+			hashed_password = Tmd5.password_hash(password, Settings.get("pas_user_profile_password_salt"), self.local.db_instance.name)
+			self.local.db_instance.password = hashed_password
 		#
 	#
 
