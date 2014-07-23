@@ -23,12 +23,13 @@ from dNG.pas.data.settings import Settings
 from dNG.pas.data.text.tmd5 import Tmd5
 from dNG.pas.database.connection import Connection
 from dNG.pas.database.instance import Instance
+from dNG.pas.database.lockable_mixin import LockableMixin
 from dNG.pas.database.nothing_matched_exception import NothingMatchedException
 from dNG.pas.database.instances.user_profile import UserProfile as _DbUserProfile
 from dNG.pas.runtime.value_exception import ValueException
 from .abstract_profile import AbstractProfile
 
-class Profile(Instance, AbstractProfile):
+class Profile(Instance, LockableMixin, AbstractProfile):
 #
 	"""
 "Profile" contains user specific data used for the Python Application
@@ -53,8 +54,9 @@ Constructor __init__(Profile)
 
 		if (db_instance == None): db_instance = _DbUserProfile()
 
-		AbstractProfile.__init__(self)
 		Instance.__init__(self, db_instance)
+		LockableMixin.__init__(self)
+		AbstractProfile.__init__(self)
 
 		self.db_id = (None if (db_instance == None) else db_instance.id)
 		"""
@@ -88,19 +90,6 @@ Checks if the user has been deleted.
 
 		profile_data = self.get_data_attributes("deleted")
 		return profile_data['deleted']
-	#
-
-	def is_locked(self):
-	#
-		"""
-Checks if the user is locked.
-
-:return: (bool) True if the user is locked
-:since:  v0.1.00
-		"""
-
-		profile_data = self.get_data_attributes("locked")
-		return profile_data['locked']
 	#
 
 	def is_password_valid(self, password):
