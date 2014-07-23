@@ -97,6 +97,42 @@ Returns the language for this profile.
 		return self.get_data_attributes("lang")['lang']
 	#
 
+	def is_banned(self):
+	#
+		"""
+Checks if the user has been banned.
+
+:return: (bool) True if the user has been banned
+:since:  v0.1.00
+		"""
+
+		raise NotImplementedException()
+	#
+
+	def is_deleted(self):
+	#
+		"""
+Checks if the user has been deleted.
+
+:return: (bool) True if the user has been deleted
+:since:  v0.1.00
+		"""
+
+		raise NotImplementedException()
+	#
+
+	def is_locked(self):
+	#
+		"""
+Checks if the user is locked.
+
+:return: (bool) True if the user is locked
+:since:  v0.1.00
+		"""
+
+		raise NotImplementedException()
+	#
+
 	def is_password_valid(self, password):
 	#
 		"""

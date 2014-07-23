@@ -64,6 +64,45 @@ Database ID used for reloading
 		self.supported_features['password_missed'] = True
 	#
 
+	def is_banned(self):
+	#
+		"""
+Checks if the user has been banned.
+
+:return: (bool) True if the user has been banned
+:since:  v0.1.00
+		"""
+
+		profile_data = self.get_data_attributes("banned")
+		return profile_data['banned']
+	#
+
+	def is_deleted(self):
+	#
+		"""
+Checks if the user has been deleted.
+
+:return: (bool) True if the user has been deleted
+:since:  v0.1.00
+		"""
+
+		profile_data = self.get_data_attributes("deleted")
+		return profile_data['deleted']
+	#
+
+	def is_locked(self):
+	#
+		"""
+Checks if the user is locked.
+
+:return: (bool) True if the user is locked
+:since:  v0.1.00
+		"""
+
+		profile_data = self.get_data_attributes("locked")
+		return profile_data['locked']
+	#
+
 	def is_password_valid(self, password):
 	#
 		"""
