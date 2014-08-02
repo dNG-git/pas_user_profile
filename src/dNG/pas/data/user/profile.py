@@ -264,6 +264,8 @@ Load Profile instance by an e-mail address.
 :since:  v0.1.00
 		"""
 
+		if (email == None): raise NothingMatchedException("Profile e-mail is invalid")
+
 		with Connection.get_instance() as database:
 		#
 			db_instance = (database.query(_DbUserProfile).filter(_DbUserProfile.email.ilike(email)).first()
@@ -288,6 +290,8 @@ Load Profile instance by ID.
 :since:  v0.1.00
 		"""
 
+		if (_id == None): raise NothingMatchedException("Profile ID is invalid")
+
 		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).get(_id)
 		if (db_instance == None): raise NothingMatchedException("Profile ID '{0}' is invalid".format(_id))
 		return Profile(db_instance)
@@ -297,13 +301,13 @@ Load Profile instance by ID.
 	def load_list(offset = 0, limit = -1, _type = None):
 	#
 		"""
-Load list of valid user profiles sorted by registration time.
+Load a list of valid user profiles sorted by registration time.
 
 :param offset: SQLAlchemy query offset
 :param limit: SQLAlchemy query limit
 :param _type: User type to be checked
 
-:return: (list) Profile instance on success
+:return: (list) List of profile instances on success
 :since:  v0.1.00
 		"""
 
@@ -336,6 +340,8 @@ Load Profile instance by user name.
 :return: (object) Profile instance on success
 :since:  v0.1.00
 		"""
+
+		if (username == None): raise NothingMatchedException("Profile user name is invalid")
 
 		with Connection.get_instance() as database:
 		#
