@@ -266,11 +266,11 @@ Load Profile instance by an e-mail address.
 
 		if (email == None): raise NothingMatchedException("Profile e-mail is invalid")
 
-		with Connection.get_instance() as database:
+		with Connection.get_instance() as connection:
 		#
-			db_instance = (database.query(_DbUserProfile).filter(_DbUserProfile.email.ilike(email)).first()
+			db_instance = (connection.query(_DbUserProfile).filter(_DbUserProfile.email.ilike(email)).first()
 			               if (insensitive) else
-			               database.query(_DbUserProfile).filter(_DbUserProfile.email == email).first()
+			               connection.query(_DbUserProfile).filter(_DbUserProfile.email == email).first()
 			              )
 		#
 
@@ -292,7 +292,7 @@ Load Profile instance by ID.
 
 		if (_id == None): raise NothingMatchedException("Profile ID is invalid")
 
-		with Connection.get_instance() as database: db_instance = database.query(_DbUserProfile).get(_id)
+		with Connection.get_instance() as connection: db_instance = connection.query(_DbUserProfile).get(_id)
 		if (db_instance == None): raise NothingMatchedException("Profile ID '{0}' is invalid".format(_id))
 		return Profile(db_instance)
 	#
@@ -311,9 +311,9 @@ Load a list of valid user profiles sorted by registration time.
 :since:  v0.1.00
 		"""
 
-		with Connection.get_instance() as database:
+		with Connection.get_instance() as connection:
 		#
-			db_query = database.query(_DbUserProfile).filter(_DbUserProfile.deleted != True)
+			db_query = connection.query(_DbUserProfile).filter(_DbUserProfile.deleted != True)
 
 			if (_type != None):
 			#
@@ -324,7 +324,7 @@ Load a list of valid user profiles sorted by registration time.
 			if (offset > 0): db_query = db_query.offset(offset)
 			if (limit > 0): db_query = db_query.limit(limit)
 
-			return Profile.buffered_iterator(_DbUserProfile, database.execute(db_query), Profile)
+			return Profile.buffered_iterator(_DbUserProfile, connection.execute(db_query), Profile)
 		#
 	#
 
@@ -343,11 +343,11 @@ Load Profile instance by user name.
 
 		if (username == None): raise NothingMatchedException("Profile user name is invalid")
 
-		with Connection.get_instance() as database:
+		with Connection.get_instance() as connection:
 		#
-			db_instance = (database.query(_DbUserProfile).filter(_DbUserProfile.name.ilike(username)).first()
+			db_instance = (connection.query(_DbUserProfile).filter(_DbUserProfile.name.ilike(username)).first()
 			               if (insensitive) else
-			               database.query(_DbUserProfile).filter(_DbUserProfile.name == username).first()
+			               connection.query(_DbUserProfile).filter(_DbUserProfile.name == username).first()
 			              )
 		#
 
