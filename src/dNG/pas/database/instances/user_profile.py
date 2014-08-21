@@ -6,13 +6,13 @@ direct PAS
 Python Application Services
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?pas;user_profile
+https://www.direct-netware.de/redirect?pas;user_profile
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(pasUserProfileVersion)#
 #echo(__FILEPATH__)#
@@ -36,7 +36,7 @@ SQLAlchemy database instance for Profile.
 :package:    pas
 :subpackage: user_profile
 :since:      v0.1.00
-:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
+:license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
 
@@ -50,7 +50,7 @@ SQLAlchemy table name
 	"""
 Encapsulating SQLAlchemy database instance class name
 	"""
-	db_schema_version = 1
+	db_schema_version = 2
 	"""
 Database schema version
 	"""
@@ -83,7 +83,7 @@ user_profile.locked
 	"""
 user_profile.name
 	"""
-	password = Column(CHAR(96), nullable = False)
+	password = Column(CHAR(96))
 	"""
 user_profile.password
 	"""

@@ -6,13 +6,13 @@ direct PAS
 Python Application Services
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?pas;user_profile
+https://www.direct-netware.de/redirect?pas;user_profile
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(pasUserProfileVersion)#
 #echo(__FILEPATH__)#
@@ -27,7 +27,7 @@ from dNG.pas.data.settings import Settings
 from dNG.pas.data.text.tmd5 import Tmd5
 from dNG.pas.data.user.profile import Profile
 from dNG.pas.database.schema import Schema
-from dNG.pas.loader.cli import Cli
+from dNG.pas.loader.interactive_cli import InteractiveCli
 from dNG.pas.module.named_loader import NamedLoader
 from dNG.pas.plugins.hook import Hook
 
@@ -50,9 +50,9 @@ Called for "dNG.pas.Database.applySchema.after"
 		db_user_profile_class = NamedLoader.get_class("dNG.pas.database.instances.UserProfile")
 		Schema.apply_version(db_user_profile_class)
 
-		cli = Cli.get_instance()
+		cli = InteractiveCli.get_instance()
 
-		if (cli != None
+		if (isinstance(cli, InteractiveCli)
 		    and hasattr(cli, "is_cli_setup")
 		    and cli.is_cli_setup()
 		   ): _ensure_administrative_user_account()
@@ -70,7 +70,7 @@ one if this is not the case.
 :since: v0.1.00
 	"""
 
-	cli = Cli.get_instance()
+	cli = InteractiveCli.get_instance()
 	cli.output_info("Validating administrative account ...")
 
 	user_profile_class = NamedLoader.get_class("dNG.pas.data.user.Profile")

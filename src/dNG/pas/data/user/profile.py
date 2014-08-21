@@ -6,13 +6,13 @@ direct PAS
 Python Application Services
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?pas;user_profile
+https://www.direct-netware.de/redirect?pas;user_profile
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(pasUserProfileVersion)#
 #echo(__FILEPATH__)#
@@ -40,7 +40,7 @@ Services. Logging in and additional details may come from external sources.
 :package:    pas
 :subpackage: user_profile
 :since:      v0.1.00
-:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
+:license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
 
@@ -62,6 +62,8 @@ Constructor __init__(Profile)
 		"""
 Database ID used for reloading
 		"""
+
+		Settings.read_file("{0}/settings/pas_user_profile.json".format(Settings.get("path_data")))
 
 		self.supported_features['password_missed'] = True
 	#
@@ -110,8 +112,8 @@ Checks if the password is correct.
 		#
 			hashed_password = Tmd5.password_hash(password, Settings.get("pas_user_profile_password_salt"), self.local.db_instance.name)
 
-			return (hashed_password == self.local.db_instance.password
-			        and self.local.db_instance.type_ex == ""
+			return (self.local.db_instance.type != Profile.TYPE_EXTERNAL_VERIFIED_MEMBER
+			        and hashed_password == self.local.db_instance.password
 			       )
 		#
 	#

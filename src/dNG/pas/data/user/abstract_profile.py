@@ -6,13 +6,13 @@ direct PAS
 Python Application Services
 ----------------------------------------------------------------------------
 (C) direct Netware Group - All rights reserved
-http://www.direct-netware.de/redirect.py?pas;user_profile
+https://www.direct-netware.de/redirect?pas;user_profile
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can
 obtain one at http://mozilla.org/MPL/2.0/.
 ----------------------------------------------------------------------------
-http://www.direct-netware.de/redirect.py?licenses;mpl2
+https://www.direct-netware.de/redirect?licenses;mpl2
 ----------------------------------------------------------------------------
 #echo(pasUserProfileVersion)#
 #echo(__FILEPATH__)#
@@ -35,7 +35,7 @@ Application Services.
 :package:    pas
 :subpackage: user_profile
 :since:      v0.1.00
-:license:    http://www.direct-netware.de/redirect.py?licenses;mpl2
+:license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
 
@@ -261,6 +261,7 @@ Parses the given type parameter given as a string value.
 		"""
 
 		if (_type == "ad"): _return = AbstractProfile.TYPE_ADMINISTRATOR
+		elif (_type == "ex"): _return = AbstractProfile.TYPE_EXTERNAL_VERIFIED_MEMBER
 		elif (_type == "me"): _return = AbstractProfile.TYPE_MEMBER
 		elif (_type == "mo"): _return = AbstractProfile.TYPE_MODERATOR
 		else: _return = AbstractProfile.TYPE_GUEST
