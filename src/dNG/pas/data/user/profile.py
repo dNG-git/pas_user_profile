@@ -58,7 +58,7 @@ Constructor __init__(Profile)
 		LockableMixin.__init__(self)
 		AbstractProfile.__init__(self)
 
-		self.db_id = (None if (db_instance == None) else db_instance.id)
+		self.db_id = (None if (db_instance == None) else self.get_id())
 		"""
 Database ID used for reloading
 		"""
