@@ -163,9 +163,8 @@ Constructor __init__(UserProfile)
 		"""
 
 		Abstract.__init__(self, *args, **kwargs)
-
-		if (self.id == None): self.id = uuid().hex
-		if (self.registration_time == None): self.registration_time = int(time())
+		if (self.id is None): self.id = uuid().hex
+		if (self.registration_time is None): self.registration_time = int(time())
 	#
 #
 

@@ -75,7 +75,7 @@ one if this is not the case.
 
 	user_profile_class = NamedLoader.get_class("dNG.pas.data.user.Profile")
 
-	if (next(user_profile_class.load_list(limit = 1, _type = "ad"), None) != None): cli.output_info("Administrative account is available")
+	if (next(user_profile_class.load_list(limit = 1, _type = "ad"), None) is not None): cli.output_info("Administrative account is available")
 	else:
 	#
 		cli.output_info("No valid administrative account found")

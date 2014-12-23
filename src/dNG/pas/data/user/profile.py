@@ -52,13 +52,13 @@ Constructor __init__(Profile)
 :since: v0.1.00
 		"""
 
-		if (db_instance == None): db_instance = _DbUserProfile()
+		if (db_instance is None): db_instance = _DbUserProfile()
 
 		Instance.__init__(self, db_instance)
 		LockableMixin.__init__(self)
 		AbstractProfile.__init__(self)
 
-		self.db_id = (None if (db_instance == None) else self.get_id())
+		self.db_id = (None if (db_instance is None) else self.get_id())
 		"""
 Database ID used for reloading
 		"""
@@ -106,7 +106,7 @@ Checks if the password is correct.
 		"""
 
 		salt = Settings.get("pas_user_profile_password_salt")
-		if (salt == None): raise ValueException("User profile password salt is not defined")
+		if (salt is None): raise ValueException("User profile password salt is not defined")
 
 		with self:
 		#
@@ -130,9 +130,9 @@ thread.
 
 		_return = True
 
-		if (self.db_id == None):
+		if (self.db_id is None):
 		# Thread safety
-			with self._lock: _return = (self.db_id != None)
+			with self._lock: _return = (self.db_id is not None)
 		#
 
 		return _return
@@ -233,7 +233,7 @@ Sets the profile password.
 		"""
 
 		salt = Settings.get("pas_user_profile_password_salt")
-		if (salt == None): raise ValueException("User profile password salt is not defined")
+		if (salt is None): raise ValueException("User profile password salt is not defined")
 
 		with self:
 		#
@@ -266,7 +266,7 @@ Load Profile instance by an e-mail address.
 :since:  v0.1.00
 		"""
 
-		if (email == None): raise NothingMatchedException("Profile e-mail is invalid")
+		if (email is None): raise NothingMatchedException("Profile e-mail is invalid")
 
 		with Connection.get_instance() as connection:
 		#
@@ -276,7 +276,7 @@ Load Profile instance by an e-mail address.
 			              )
 		#
 
-		if (db_instance == None): raise NothingMatchedException("Profile e-mail '{0}' is invalid".format(email))
+		if (db_instance is None): raise NothingMatchedException("Profile e-mail '{0}' is invalid".format(email))
 		return Profile(db_instance)
 	#
 
@@ -292,10 +292,10 @@ Load Profile instance by ID.
 :since:  v0.1.00
 		"""
 
-		if (_id == None): raise NothingMatchedException("Profile ID is invalid")
+		if (_id is None): raise NothingMatchedException("Profile ID is invalid")
 
 		with Connection.get_instance() as connection: db_instance = connection.query(_DbUserProfile).get(_id)
-		if (db_instance == None): raise NothingMatchedException("Profile ID '{0}' is invalid".format(_id))
+		if (db_instance is None): raise NothingMatchedException("Profile ID '{0}' is invalid".format(_id))
 		return Profile(db_instance)
 	#
 
@@ -317,7 +317,7 @@ Load a list of valid user profiles sorted by registration time.
 		#
 			db_query = connection.query(_DbUserProfile).filter(_DbUserProfile.deleted != True)
 
-			if (_type != None):
+			if (_type is not None):
 			#
 				if (type(_type) != int): _type = Profile.get_type(_type)
 				db_query = db_query.filter(_DbUserProfile.type == _type)
@@ -326,7 +326,7 @@ Load a list of valid user profiles sorted by registration time.
 			if (offset > 0): db_query = db_query.offset(offset)
 			if (limit > 0): db_query = db_query.limit(limit)
 
-			return Profile.buffered_iterator(_DbUserProfile, connection.execute(db_query), Profile)
+			return Profile.buffered_iterator(_DbUserProfile, connection.execute(db_query))
 		#
 	#
 
@@ -343,7 +343,7 @@ Load Profile instance by user name.
 :since:  v0.1.00
 		"""
 
-		if (username == None): raise NothingMatchedException("Profile user name is invalid")
+		if (username is None): raise NothingMatchedException("Profile user name is invalid")
 
 		with Connection.get_instance() as connection:
 		#
@@ -353,7 +353,7 @@ Load Profile instance by user name.
 			              )
 		#
 
-		if (db_instance == None): raise NothingMatchedException("Profile user name '{0}' is invalid".format(username))
+		if (db_instance is None): raise NothingMatchedException("Profile user name '{0}' is invalid".format(username))
 		return Profile(db_instance)
 	#
 #
