@@ -151,7 +151,7 @@ Checks if the user type is the given one.
 
 		with self:
 		#
-			if (type(_type) != int): _type = self.__class__.get_type(_type)
+			if (type(_type) is not int): _type = self.__class__.get_type_int(_type)
 			return (self.local.db_instance.type == _type)
 		#
 	#
@@ -194,7 +194,7 @@ Sets values given as keyword arguments to this method.
 		#
 			if ("type" in kwargs):
 			#
-				_type = (kwargs['type'] if (type(kwargs['type']) == int) else self.__class__.get_type(kwargs['type']))
+				_type = (kwargs['type'] if (type(kwargs['type']) is int) else self.__class__.get_type_int(kwargs['type']))
 				self.local.db_instance.type = _type
 			#
 
@@ -319,7 +319,7 @@ Load a list of valid user profiles sorted by registration time.
 
 			if (_type is not None):
 			#
-				if (type(_type) != int): _type = Profile.get_type(_type)
+				if (type(_type) is not int): _type = Profile.get_type_int(_type)
 				db_query = db_query.filter(_DbUserProfile.type == _type)
 			#
 

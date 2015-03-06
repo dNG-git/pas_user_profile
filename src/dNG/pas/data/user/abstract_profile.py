@@ -249,7 +249,7 @@ in a hashed form in a database.
 	#
 
 	@staticmethod
-	def get_type(_type):
+	def get_type_int(_type):
 	#
 		"""
 Parses the given type parameter given as a string value.
