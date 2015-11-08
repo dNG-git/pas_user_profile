@@ -44,6 +44,11 @@ Services. Logging in and additional details may come from external sources.
              Mozilla Public License, v. 2.0
 	"""
 
+	_DB_INSTANCE_CLASS = _DbUserProfile
+	"""
+SQLAlchemy database instance class to initialize for new instances.
+	"""
+
 	def __init__(self, db_instance = None):
 	#
 		"""
@@ -253,12 +258,13 @@ Unlocks a user profile.
 		self.set_data_attributes(locked = False)
 	#
 
-	@staticmethod
-	def load_email(email, insensitive = False):
+	@classmethod
+	def load_email(cls, email, insensitive = False):
 	#
 		"""
 Load Profile instance by an e-mail address.
 
+:param cls: Expected encapsulating database instance class
 :param email: Profile's e-mail address
 :param insensitive: Search case-insensitive for the given value
 
@@ -268,24 +274,29 @@ Load Profile instance by an e-mail address.
 
 		if (email is None): raise NothingMatchedException("Profile e-mail is invalid")
 
-		with Connection.get_instance() as connection:
+		with Connection.get_instance():
 		#
-			db_instance = (connection.query(_DbUserProfile).filter(_DbUserProfile.email.ilike(email)).first()
-			               if (insensitive) else
-			               connection.query(_DbUserProfile).filter(_DbUserProfile.email == email).first()
-			              )
-		#
+			db_instance = Instance.get_db_class_query(cls)
 
-		if (db_instance is None): raise NothingMatchedException("Profile e-mail '{0}' is invalid".format(email))
-		return Profile(db_instance)
+			db_instance = (db_instance.filter(_DbUserProfile.email.ilike(email)).first()
+			               if (insensitive) else
+			               db_instance.filter(_DbUserProfile.email == email).first()
+			              )
+
+			if (db_instance is None): raise NothingMatchedException("Profile e-mail '{0}' is invalid".format(email))
+			Instance._ensure_db_class(cls, db_instance)
+
+			return Profile(db_instance)
+		#
 	#
 
-	@staticmethod
-	def load_id(_id):
+	@classmethod
+	def load_id(cls, _id):
 	#
 		"""
 Load Profile instance by ID.
 
+:param cls: Expected encapsulating database instance class
 :param _id: Profile ID
 
 :return: (object) Profile instance on success
@@ -294,9 +305,15 @@ Load Profile instance by ID.
 
 		if (_id is None): raise NothingMatchedException("Profile ID is invalid")
 
-		with Connection.get_instance() as connection: db_instance = connection.query(_DbUserProfile).get(_id)
-		if (db_instance is None): raise NothingMatchedException("Profile ID '{0}' is invalid".format(_id))
-		return Profile(db_instance)
+		with Connection.get_instance():
+		#
+			db_instance = Instance.get_db_class_query(cls).get(_id)
+
+			if (db_instance is None): raise NothingMatchedException("Profile ID '{0}' is invalid".format(_id))
+			Instance._ensure_db_class(cls, db_instance)
+
+			return Profile(db_instance)
+		#
 	#
 
 	@staticmethod
@@ -330,12 +347,13 @@ Load a list of valid user profiles sorted by registration time.
 		#
 	#
 
-	@staticmethod
-	def load_username(username, insensitive = False):
+	@classmethod
+	def load_username(cls, username, insensitive = False):
 	#
 		"""
 Load Profile instance by user name.
 
+:param cls: Expected encapsulating database instance class
 :param username: Profile's user name
 :param insensitive: Search case-insensitive for the given value
 
@@ -345,16 +363,20 @@ Load Profile instance by user name.
 
 		if (username is None): raise NothingMatchedException("Profile user name is invalid")
 
-		with Connection.get_instance() as connection:
+		with Connection.get_instance():
 		#
-			db_instance = (connection.query(_DbUserProfile).filter(_DbUserProfile.name.ilike(username)).first()
-			               if (insensitive) else
-			               connection.query(_DbUserProfile).filter(_DbUserProfile.name == username).first()
-			              )
-		#
+			db_instance = Instance.get_db_class_query(cls)
 
-		if (db_instance is None): raise NothingMatchedException("Profile user name '{0}' is invalid".format(username))
-		return Profile(db_instance)
+			db_instance = (db_instance.filter(_DbUserProfile.name.ilike(username)).first()
+			               if (insensitive) else
+			               db_instance.filter(_DbUserProfile.name == username).first()
+			              )
+
+			if (db_instance is None): raise NothingMatchedException("Profile user name '{0}' is invalid".format(username))
+			Instance._ensure_db_class(cls, db_instance)
+
+			return Profile(db_instance)
+		#
 	#
 #
 
