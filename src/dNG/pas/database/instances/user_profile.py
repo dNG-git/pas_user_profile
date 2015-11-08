@@ -18,13 +18,15 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
+from sqlalchemy.orm import foreign, relationship, remote
 from sqlalchemy.schema import Column
-from sqlalchemy.types import BOOLEAN, CHAR, INT, REAL, TEXT, SMALLINT, VARCHAR
+from sqlalchemy.types import BOOLEAN, CHAR, INT, FLOAT, TEXT, SMALLINT, VARCHAR
 from time import time
 from uuid import uuid4 as uuid
 
 from dNG.pas.database.types.date_time import DateTime
 from .abstract import Abstract
+from .acl_entry import AclEntry
 
 class UserProfile(Abstract):
 #
@@ -50,7 +52,7 @@ SQLAlchemy table name
 	"""
 Encapsulating SQLAlchemy database instance class name
 	"""
-	db_schema_version = 2
+	db_schema_version = 3
 	"""
 Database schema version
 	"""
@@ -143,16 +145,23 @@ user_profile.lastvisit_ip
 	"""
 user_profile.lastvisit_time
 	"""
-	rating = Column(INT, server_default = "0", nullable = False)
+	rating = Column(FLOAT, server_default = "0", nullable = False)
 	"""
 user_profile.rating
 	"""
-	timezone = Column(REAL, server_default = "0", nullable = False)
+	timezone = Column(FLOAT, server_default = "0", nullable = False)
 	"""
 user_profile.timezone
 	"""
 
-	#rel_permissions = relationship("PermissionGroup", primaryjoin = "and_(Profile.id == PermissionGroup.id_source, PermissionGroup.db_type == 'u')", secondary = PermissionGroup)
+	rel_acl_entry = relationship(AclEntry, primaryjoin = (foreign(id) == remote(AclEntry.owned_id)), uselist = False)
+	"""
+Relation to AclEntry
+	"""
+	"""
+@TODO: rel_user_groups = relationship(UserGroup, primaryjoin = (foreign(id) == remote(UserGroup.id_user)))
+Relation to AclGroup
+	"""
 
 	def __init__(self, *args, **kwargs):
 	#
