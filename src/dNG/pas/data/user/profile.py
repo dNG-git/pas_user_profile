@@ -161,6 +161,42 @@ Checks if the user type is the given one.
 		#
 	#
 
+	def is_type_or_higher(self, _type):
+	#
+		"""
+Checks if the user type is the given one or has higher privileges.
+
+:param _type: User type to be checked
+
+:return: (bool) True if the user type is the given one or higher
+:since:  v0.1.02
+		"""
+
+		with self:
+		#
+			if (type(_type) is not int): _type = self.__class__.get_type_int(_type)
+			return (self.local.db_instance.type >= _type)
+		#
+	#
+
+	def is_type_or_lower(self, _type):
+	#
+		"""
+Checks if the user type is the given one or has lower privileges.
+
+:param _type: User type to be checked
+
+:return: (bool) True if the user type is the given one or lower
+:since:  v0.1.02
+		"""
+
+		with self:
+		#
+			if (type(_type) is not int): _type = self.__class__.get_type_int(_type)
+			return (self.local.db_instance.type <= _type)
+		#
+	#
+
 	def is_valid(self):
 	#
 		"""

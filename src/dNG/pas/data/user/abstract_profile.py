@@ -161,6 +161,34 @@ Checks if the user type is the given one.
 		raise NotImplementedException()
 	#
 
+	def is_type_or_higher(self, _type):
+	#
+		"""
+Checks if the user type is the given one or has higher privileges.
+
+:param _type: User type to be checked
+
+:return: (bool) True if the user type is the given one or higher
+:since:  v0.1.02
+		"""
+
+		raise NotImplementedException()
+	#
+
+	def is_type_or_lower(self, _type):
+	#
+		"""
+Checks if the user type is the given one or has lower privileges.
+
+:param _type: User type to be checked
+
+:return: (bool) True if the user type is the given one or lower
+:since:  v0.1.02
+		"""
+
+		raise NotImplementedException()
+	#
+
 	def is_valid(self):
 	#
 		"""
