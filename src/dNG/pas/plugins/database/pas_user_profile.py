@@ -98,7 +98,7 @@ one if this is not the case.
 
 		user_profile = user_profile_class()
 
-		user_profile.set_data_attributes(type = user_profile_class.get_type("ad"),
+		user_profile.set_data_attributes(type = user_profile_class.get_type_int("ad"),
 		                                 name = "root",
 		                                 password = password_encrypted,
 		                                 locked = False,
