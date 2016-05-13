@@ -38,7 +38,7 @@ from os import path
 
 with TemporaryDirectory(dir = ".") as build_directory:
 #
-	parameters = { "install_data_plain_copy_extensions": "sql",
+	parameters = { "install_data_plain_copy_extensions": "json,sql",
 	               "pasUserProfileVersion": get_version()
 	             }
 
