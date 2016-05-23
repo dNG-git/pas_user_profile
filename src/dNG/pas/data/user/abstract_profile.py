@@ -23,6 +23,7 @@ from random import randrange
 from dNG.pas.data.settings import Settings
 from dNG.pas.data.supports_mixin import SupportsMixin
 from dNG.pas.runtime.not_implemented_exception import NotImplementedException
+from dNG.pas.data.acl.entry import Entry
 
 class AbstractProfile(SupportsMixin):
 #
@@ -62,6 +63,22 @@ Profile identifies a member
 Profile identifies a member with moderation rights
 	"""
 
+	def __init__(self):
+	#
+		"""
+Constructor __init__(AbstractProfile)
+
+:since: v0.1.00
+		"""
+
+		SupportsMixin.__init__(self)
+
+		self.permission_cache = None
+		"""
+Permission cache for this user instance.
+		"""
+	#
+
 	def get_data_attributes(self, *args):
 	#
 		"""
@@ -95,6 +112,26 @@ Returns the language for this profile.
 		"""
 
 		return self.get_data_attributes("lang")['lang']
+	#
+
+	def get_permissions_dict(self):
+	#
+		"""
+Returns a dictionary of permissions for this profile.
+
+:return: (dict) Dictionary of permissions
+:since:  v0.1.03
+		"""
+
+		if (self.permission_cache is None):
+		#
+			_id = self.get_id()
+
+			acl_entry = Entry.load_acl_id(_id, "u_{0}".format(_id))
+			self.permission_cache = acl_entry.get_permissions_dict()
+		#
+
+		return self.permission_cache
 	#
 
 	def is_banned(self):
@@ -145,6 +182,28 @@ Checks if the password is correct.
 		"""
 
 		raise NotImplementedException()
+	#
+
+	def is_permitted(self, permission_name):
+	#
+		"""
+Returns true if the user has the permission defined.
+
+:param permission_name: Permission name to check
+
+:return: (bool) True if permission has been granted
+:since:  v0.1.03
+		"""
+
+		_return = self.is_type(AbstractProfile.TYPE_ADMINISTRATOR)
+
+		if (not _return):
+		#
+			permissions = self.get_permissions_dict()
+			_return = permissions.get(permission_name, False)
+		#
+
+		return _return
 	#
 
 	def is_type(self, _type):
@@ -210,6 +269,17 @@ Locks a user profile.
 		"""
 
 		raise NotImplementedException()
+	#
+
+	def reset_permissions_cache(self):
+	#
+		"""
+Resets the permission cache.
+
+:since: v0.1.03
+		"""
+
+		self.permission_cache = None
 	#
 
 	def set_data_attributes(self, **kwargs):
