@@ -83,7 +83,16 @@ Add the given permission instance.
 
 		if (isinstance(permission, Permission)):
 		#
-			with self: self.local.db_instance.rel_permissions.append(permission._get_db_instance())
+			with self:
+			#
+				self.local.db_instance.rel_permissions.append(permission._get_db_instance())
+
+				if (self.local.permission_cache is not None):
+				#
+					permission_data = permission.get_data_attributes("name", "permitted")
+					self.local.permission_cache[permission_data['name']] = { "permitted": permission_data['permitted'], "db_instance": permission }
+				#
+			#
 		#
 	#
 
@@ -135,6 +144,39 @@ Returns the owner type of this instance.
 :since:  v0.1.02
 	"""
 
+	def get_permissions(self):
+	#
+		"""
+Returns the underlying database relation to the permission instances.
+
+:return: (object) Permission instances database relation
+:since:  v0.1.03
+		"""
+
+		with self: return self.local.db_instance.rel_permissions
+	#
+
+	def get_permissions_dict(self):
+	#
+		"""
+Returns a dictionary with permissions.
+
+:return: (dict) Dictionary of permissions
+:since:  v0.1.03
+		"""
+
+		# pylint: disable=protected-access
+
+		_return = { }
+
+		self._ensure_thread_local_permission_cache()
+		if (self.local.permission_cache is None): self._init_permission_cache()
+
+		for permission_name in self.local.permission_cache: _return[permission_name] = self.local.permission_cache[permission_name]['permitted']
+
+		return _return
+	#
+
 	def _init_permission_cache(self):
 	#
 		"""
@@ -175,7 +217,16 @@ Removes the given permission instance.
 
 		if (isinstance(permission, Permission)):
 		#
-			with self: self.local.db_instance.rel_permissions.remove(permission._get_db_instance())
+			with self:
+			#
+				self.local.db_instance.rel_permissions.remove(permission._get_db_instance())
+
+				if (self.local.permission_cache is not None):
+				#
+					permission_data = permission.get_data_attributes("name", "permitted")
+					if (permission_data['name'] in self.local.permission_cache): del(self.local.permission_cache[permission_data['name']])
+				#
+			#
 		#
 	#
 
@@ -249,7 +300,7 @@ Unsets the permission with the specified name.
 	#
 
 	@classmethod
-	def load_acl_id(cls, acl_id):
+	def load_acl_id(cls, owned_id, acl_id):
 	#
 		"""
 Load Entry instance by its ACL ID.
@@ -261,6 +312,8 @@ Load Entry instance by its ACL ID.
 :since:  v0.1.02
 		"""
 
+		if (owned_id is None): raise NothingMatchedException("Owned ID is invalid")
+
 		if (acl_id is None): raise NothingMatchedException("ACL ID is invalid")
 		elif ("_" not in acl_id): raise NothingMatchedException("ACL ID '{0}' is invalid".format(acl_id))
 
@@ -269,14 +322,15 @@ Load Entry instance by its ACL ID.
 			( owner_type, owner_id ) = acl_id.split("_", 1)
 
 			db_instance = (Instance.get_db_class_query(cls)
-			               .filter(and_(_DbAclEntry.owner_type == owner_type,
-			                            _DbAclEntry.owner_id == owner_id
+			               .filter(and_(_DbAclEntry.owned_id == owned_id,
+			                            _DbAclEntry.owner_id == owner_id,
+			                            _DbAclEntry.owner_type == owner_type
 			                           )
 			                      )
 			               .first()
 			              )
 
-			if (db_instance is None): raise NothingMatchedException("ACL ID '{0}' is invalid".format(acl_id))
+			if (db_instance is None): raise NothingMatchedException("ACL ID '{0}' for owned ID '{1}' is invalid".format(acl_id, owned_id))
 			Instance._ensure_db_class(cls, db_instance)
 
 			return Entry(db_instance)
