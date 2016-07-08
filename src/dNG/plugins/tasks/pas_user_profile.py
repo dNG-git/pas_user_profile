@@ -20,10 +20,10 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 
 # pylint: disable=unused-argument
 
-from dNG.pas.database.nothing_matched_exception import NothingMatchedException
-from dNG.pas.module.named_loader import NamedLoader
-from dNG.pas.plugins.hook import Hook
-from dNG.pas.runtime.value_exception import ValueException
+from dNG.database.nothing_matched_exception import NothingMatchedException
+from dNG.module.named_loader import NamedLoader
+from dNG.plugins.hook import Hook
+from dNG.runtime.value_exception import ValueException
 
 def delete(params, last_return = None):
 #
@@ -34,7 +34,7 @@ Called for "dNG.pas.user.Profile.delete"
 :param last_return: The return value from the last hook called.
 
 :return: (mixed) Return value
-:since:  v0.1.00
+:since:  v0.2.00
 	"""
 
 	# pylint: disable=star-args
@@ -42,7 +42,7 @@ Called for "dNG.pas.user.Profile.delete"
 	if ("username" not in params): raise ValueException("Missing required argument")
 	else:
 	#
-		user_profile_class = NamedLoader.get_class("dNG.pas.data.user.Profile")
+		user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
 
 		try:
 		#
@@ -62,7 +62,7 @@ def register_plugin():
 	"""
 Register plugin hooks.
 
-:since: v0.1.00
+:since: v0.2.00
 	"""
 
 	Hook.register("dNG.pas.user.Profile.delete", delete)
@@ -73,7 +73,7 @@ def unregister_plugin():
 	"""
 Unregister plugin hooks.
 
-:since: v0.1.00
+:since: v0.2.00
 	"""
 
 	Hook.unregister("dNG.pas.user.Profile.delete", delete)

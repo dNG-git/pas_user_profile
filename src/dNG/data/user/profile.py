@@ -18,15 +18,16 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
-from dNG.pas.data.binary import Binary
-from dNG.pas.data.settings import Settings
-from dNG.pas.data.text.tmd5 import Tmd5
-from dNG.pas.database.connection import Connection
-from dNG.pas.database.instance import Instance
-from dNG.pas.database.lockable_mixin import LockableMixin
-from dNG.pas.database.nothing_matched_exception import NothingMatchedException
-from dNG.pas.database.instances.user_profile import UserProfile as _DbUserProfile
-from dNG.pas.runtime.value_exception import ValueException
+from dNG.data.binary import Binary
+from dNG.data.settings import Settings
+from dNG.data.text.tmd5 import Tmd5
+from dNG.database.connection import Connection
+from dNG.database.instance import Instance
+from dNG.database.instances.user_profile import UserProfile as _DbUserProfile
+from dNG.database.lockable_mixin import LockableMixin
+from dNG.database.nothing_matched_exception import NothingMatchedException
+from dNG.runtime.value_exception import ValueException
+
 from .abstract_profile import AbstractProfile
 
 class Profile(Instance, LockableMixin, AbstractProfile):
@@ -35,11 +36,11 @@ class Profile(Instance, LockableMixin, AbstractProfile):
 "Profile" contains user specific data used for the Python Application
 Services. Logging in and additional details may come from external sources.
 
-:author:     direct Netware Group
+:author:     direct Netware Group et al.
 :copyright:  direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: user_profile
-:since:      v0.1.00
+:since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
@@ -54,7 +55,7 @@ SQLAlchemy database instance class to initialize for new instances.
 		"""
 Constructor __init__(Profile)
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		if (db_instance is None): db_instance = _DbUserProfile()
@@ -79,7 +80,7 @@ Database ID used for reloading
 Checks if the user has been banned.
 
 :return: (bool) True if the user has been banned
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		profile_data = self.get_data_attributes("banned")
@@ -92,7 +93,7 @@ Checks if the user has been banned.
 Checks if the user has been deleted.
 
 :return: (bool) True if the user has been deleted
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		profile_data = self.get_data_attributes("deleted")
@@ -107,7 +108,7 @@ Checks if the password is correct.
 :param password: User profile password
 
 :return: (bool) True if valid
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		salt = Settings.get("pas_user_profile_password_salt")
@@ -130,7 +131,7 @@ Returns true if the instance can be reloaded automatically in another
 thread.
 
 :return: (bool) True if reloadable
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		_return = True
@@ -151,7 +152,7 @@ Checks if the user type is the given one.
 :param _type: User type to be checked
 
 :return: (bool) True if the user type is the given one
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		with self:
@@ -169,7 +170,7 @@ Checks if the user type is the given one or has higher privileges.
 :param _type: User type to be checked
 
 :return: (bool) True if the user type is the given one or higher
-:since:  v0.1.02
+:since:  v0.2.00
 		"""
 
 		with self:
@@ -187,7 +188,7 @@ Checks if the user type is the given one or has lower privileges.
 :param _type: User type to be checked
 
 :return: (bool) True if the user type is the given one or lower
-:since:  v0.1.02
+:since:  v0.2.00
 		"""
 
 		with self:
@@ -205,7 +206,7 @@ Checks if the user is valid (not banned, deleted or locked).
 :param _type: User type to be checked
 
 :return: (bool) True if the user type is the given one
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		profile_data = self.get_data_attributes("banned", "deleted", "locked")
@@ -217,7 +218,7 @@ Checks if the user is valid (not banned, deleted or locked).
 		"""
 Locks a user profile.
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.set_data_attributes(locked = True)
@@ -228,7 +229,7 @@ Locks a user profile.
 		"""
 Sets values given as keyword arguments to this method.
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		with self:
@@ -270,7 +271,7 @@ Sets the profile password.
 
 :param password: User profile password
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		salt = Settings.get("pas_user_profile_password_salt")
@@ -288,7 +289,7 @@ Sets the profile password.
 		"""
 Unlocks a user profile.
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		self.set_data_attributes(locked = False)
@@ -305,7 +306,7 @@ Load Profile instance by an e-mail address.
 :param insensitive: Search case-insensitive for the given value
 
 :return: (object) Profile instance on success
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		if (email is None): raise NothingMatchedException("Profile e-mail is invalid")
@@ -336,7 +337,7 @@ Load Profile instance by ID.
 :param _id: Profile ID
 
 :return: (object) Profile instance on success
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		if (_id is None): raise NothingMatchedException("Profile ID is invalid")
@@ -363,7 +364,7 @@ Load a list of valid user profiles sorted by registration time.
 :param _type: User type to be checked
 
 :return: (list) List of profile instances on success
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		with Connection.get_instance() as connection:
@@ -394,7 +395,7 @@ Load Profile instance by user name.
 :param insensitive: Search case-insensitive for the given value
 
 :return: (object) Profile instance on success
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		if (username is None): raise NothingMatchedException("Profile user name is invalid")

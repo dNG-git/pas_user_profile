@@ -20,10 +20,10 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 
 from random import randrange
 
-from dNG.pas.data.settings import Settings
-from dNG.pas.data.supports_mixin import SupportsMixin
-from dNG.pas.runtime.not_implemented_exception import NotImplementedException
-from dNG.pas.data.acl.entry import Entry
+from dNG.data.acl.entry import Entry
+from dNG.data.settings import Settings
+from dNG.data.supports_mixin import SupportsMixin
+from dNG.runtime.not_implemented_exception import NotImplementedException
 
 class AbstractProfile(SupportsMixin):
 #
@@ -31,11 +31,11 @@ class AbstractProfile(SupportsMixin):
 "AbstractProfile" contains abstract user specific data used for the Python
 Application Services.
 
-:author:     direct Netware Group
+:author:     direct Netware Group et al.
 :copyright:  direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: user_profile
-:since:      v0.1.00
+:since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
@@ -68,7 +68,7 @@ Profile identifies a member with moderation rights
 		"""
 Constructor __init__(AbstractProfile)
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		SupportsMixin.__init__(self)
@@ -84,7 +84,7 @@ Permission cache for this user instance.
 		"""
 Sets values given as keyword arguments to this method.
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -96,7 +96,7 @@ Sets values given as keyword arguments to this method.
 Returns the ID for this profile.
 
 :return: (str) Profile ID; None if undefined
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.get_data_attributes("id")['id']
@@ -108,7 +108,7 @@ Returns the ID for this profile.
 Returns the language for this profile.
 
 :return: (str) Profile language; None if undefined
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return self.get_data_attributes("lang")['lang']
@@ -120,7 +120,7 @@ Returns the language for this profile.
 Returns a dictionary of permissions for this profile.
 
 :return: (dict) Dictionary of permissions
-:since:  v0.1.03
+:since:  v0.2.00
 		"""
 
 		if (self.permission_cache is None):
@@ -140,7 +140,7 @@ Returns a dictionary of permissions for this profile.
 Checks if the user has been banned.
 
 :return: (bool) True if the user has been banned
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -152,7 +152,7 @@ Checks if the user has been banned.
 Checks if the user has been deleted.
 
 :return: (bool) True if the user has been deleted
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -164,7 +164,7 @@ Checks if the user has been deleted.
 Checks if the user is locked.
 
 :return: (bool) True if the user is locked
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -178,7 +178,7 @@ Checks if the password is correct.
 :param password: User profile password
 
 :return: (bool) True if valid
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -192,7 +192,7 @@ Returns true if the user has the permission defined.
 :param permission_name: Permission name to check
 
 :return: (bool) True if permission has been granted
-:since:  v0.1.03
+:since:  v0.2.00
 		"""
 
 		_return = self.is_type(AbstractProfile.TYPE_ADMINISTRATOR)
@@ -214,7 +214,7 @@ Checks if the user type is the given one.
 :param _type: User type to be checked
 
 :return: (bool) True if the user type is the given one
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -228,7 +228,7 @@ Checks if the user type is the given one or has higher privileges.
 :param _type: User type to be checked
 
 :return: (bool) True if the user type is the given one or higher
-:since:  v0.1.02
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -242,7 +242,7 @@ Checks if the user type is the given one or has lower privileges.
 :param _type: User type to be checked
 
 :return: (bool) True if the user type is the given one or lower
-:since:  v0.1.02
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -254,7 +254,7 @@ Checks if the user type is the given one or has lower privileges.
 Checks if the user is valid.
 
 :return: (bool) True if the user is known and valid
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return False
@@ -265,7 +265,7 @@ Checks if the user is valid.
 		"""
 Locks a user profile.
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -276,7 +276,7 @@ Locks a user profile.
 		"""
 Resets the permission cache.
 
-:since: v0.1.03
+:since: v0.2.00
 		"""
 
 		self.permission_cache = None
@@ -287,7 +287,7 @@ Resets the permission cache.
 		"""
 Sets values given as keyword arguments to this method.
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -300,7 +300,7 @@ Sets the profile password.
 
 :param password: User profile password
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -311,7 +311,7 @@ Sets the profile password.
 		"""
 Unlocks a user profile.
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -325,7 +325,7 @@ Generates an "Security ID string" usually used to change the e-mail address
 or log-in without the user password.
 
 :return: (str) Security ID string
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		return " ".join(AbstractProfile._generate_secid_value())
@@ -339,7 +339,7 @@ Generates a list of "Security ID string elements" usually joined and saved
 in a hashed form in a database.
 
 :return: (generator) Security ID string element generator
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		elements = int(Settings.get("pas_user_profile_secid_elements", 10))
@@ -355,7 +355,7 @@ Parses the given type parameter given as a string value.
 :param _type: String type
 
 :return: (int) Internal type
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		if (_type == "ad"): _return = AbstractProfile.TYPE_ADMINISTRATOR
@@ -377,7 +377,7 @@ Load Profile instance by an e-mail address.
 :param insensitive: Search case-insensitive for the given value
 
 :return: (object) Profile instance on success
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -392,7 +392,7 @@ Load Profile instance by ID.
 :param _id: Profile ID
 
 :return: (object) Profile instance on success
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()
@@ -408,7 +408,7 @@ Load Profile instance by user name.
 :param insensitive: Search case-insensitive for the given value
 
 :return: (object) Profile instance on success
-:since:  v0.1.00
+:since:  v0.2.00
 		"""
 
 		raise NotImplementedException()

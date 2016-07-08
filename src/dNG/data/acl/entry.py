@@ -20,12 +20,12 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 
 from sqlalchemy.sql.expression import and_
 
-from dNG.pas.data.binary import Binary
-from dNG.pas.database.connection import Connection
-from dNG.pas.database.instance import Instance
-from dNG.pas.database.nothing_matched_exception import NothingMatchedException
-from dNG.pas.database.instances.acl_entry import AclEntry as _DbAclEntry
-from dNG.pas.module.named_loader import NamedLoader
+from dNG.data.binary import Binary
+from dNG.database.connection import Connection
+from dNG.database.instance import Instance
+from dNG.database.instances.acl_entry import AclEntry as _DbAclEntry
+from dNG.database.nothing_matched_exception import NothingMatchedException
+
 from .permission import Permission
 
 class Entry(Instance):
@@ -34,11 +34,11 @@ class Entry(Instance):
 An access control list (ACL) entry links an owned entry with granted
 permissions.
 
-:author:     direct Netware Group
+:author:     direct Netware Group et al.
 :copyright:  direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: user_profile
-:since:      v0.1.02
+:since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
@@ -48,25 +48,6 @@ permissions.
 SQLAlchemy database instance class to initialize for new instances.
 	"""
 
-	def __init__(self, db_instance = None):
-	#
-		"""
-Constructor __init__(Entry)
-
-:param db_instance: Encapsulated SQLAlchemy database instance
-
-:since: v0.1.02
-		"""
-
-		Instance.__init__(self, db_instance)
-
-		self.log_handler = NamedLoader.get_singleton("dNG.pas.data.logging.LogHandler", False)
-		"""
-The LogHandler is called whenever debug messages should be logged or errors
-happened.
-		"""
-	#
-
 	def add_permission(self, permission):
 	#
 		"""
@@ -74,7 +55,7 @@ Add the given permission instance.
 
 :param permission: Permission instance
 
-:since: v0.1.02
+:since: v0.2.00
 		"""
 
 		# pylint: disable=protected-access
@@ -101,7 +82,7 @@ Add the given permission instance.
 		"""
 Checks the thread-local permission cache dictionary.
 
-:since: v0.1.02
+:since: v0.2.00
 		"""
 
 		if (not hasattr(self.local, "permission_cache")): self.local.permission_cache = None
@@ -113,7 +94,7 @@ Checks the thread-local permission cache dictionary.
 Returns the ACL ID of this instance.
 
 :return: (str) Entry ACL ID; None if undefined
-:since:  v0.1.02
+:since:  v0.2.00
 		"""
 
 		entry_data = self.get_data_attributes("owner_id", "owner_type")
@@ -125,7 +106,7 @@ Returns the ACL ID of this instance.
 Returns the owned entry ID of this instance.
 
 :return: (str) Owned entry ID; None if undefined
-:since:  v0.1.02
+:since:  v0.2.00
 	"""
 
 	get_owner_id = Instance._wrap_getter("owner_id")
@@ -133,7 +114,7 @@ Returns the owned entry ID of this instance.
 Returns the owner ID of this instance.
 
 :return: (str) ACL owner ID; None if undefined
-:since:  v0.1.02
+:since:  v0.2.00
 	"""
 
 	get_owner_type = Instance._wrap_getter("owner_type")
@@ -141,7 +122,7 @@ Returns the owner ID of this instance.
 Returns the owner type of this instance.
 
 :return: (str) ACL owner type; None if undefined
-:since:  v0.1.02
+:since:  v0.2.00
 	"""
 
 	def get_permissions(self):
@@ -150,7 +131,7 @@ Returns the owner type of this instance.
 Returns the underlying database relation to the permission instances.
 
 :return: (object) Permission instances database relation
-:since:  v0.1.03
+:since:  v0.2.00
 		"""
 
 		with self: return self.local.db_instance.rel_permissions
@@ -162,7 +143,7 @@ Returns the underlying database relation to the permission instances.
 Returns a dictionary with permissions.
 
 :return: (dict) Dictionary of permissions
-:since:  v0.1.03
+:since:  v0.2.00
 		"""
 
 		# pylint: disable=protected-access
@@ -182,7 +163,7 @@ Returns a dictionary with permissions.
 		"""
 Initializes the permission cache.
 
-:since: v0.1.02
+:since: v0.2.00
 		"""
 
 		if (self.local.permission_cache is None):
@@ -208,7 +189,7 @@ Removes the given permission instance.
 
 :param permission: Permission instance
 
-:since: v0.1.02
+:since: v0.2.00
 		"""
 
 		# pylint: disable=protected-access
@@ -235,7 +216,7 @@ Removes the given permission instance.
 		"""
 Sets values given as keyword arguments to this method.
 
-:since: v0.1.02
+:since: v0.2.00
 		"""
 
 		with self:
@@ -251,7 +232,7 @@ Sets values given as keyword arguments to this method.
 		"""
 Sets the permission with the specified name.
 
-:since: v0.1.02
+:since: v0.2.00
 		"""
 
 		name = Binary.str(name)
@@ -279,7 +260,7 @@ Sets the permission with the specified name.
 		"""
 Unsets the permission with the specified name.
 
-:since: v0.1.02
+:since: v0.2.00
 		"""
 
 		name = Binary.str(name)
@@ -309,7 +290,7 @@ Load Entry instance by its ACL ID.
 :param _id: ACL ID
 
 :return: (object) Entry instance on success
-:since:  v0.1.02
+:since:  v0.2.00
 		"""
 
 		if (owned_id is None): raise NothingMatchedException("Owned ID is invalid")

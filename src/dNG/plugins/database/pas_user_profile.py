@@ -23,13 +23,13 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 from random import choice
 import string
 
-from dNG.pas.data.settings import Settings
-from dNG.pas.data.text.tmd5 import Tmd5
-from dNG.pas.data.user.profile import Profile
-from dNG.pas.database.schema import Schema
-from dNG.pas.loader.interactive_cli import InteractiveCli
-from dNG.pas.module.named_loader import NamedLoader
-from dNG.pas.plugins.hook import Hook
+from dNG.data.settings import Settings
+from dNG.data.text.tmd5 import Tmd5
+from dNG.data.user.profile import Profile
+from dNG.database.schema import Schema
+from dNG.loader.interactive_cli import InteractiveCli
+from dNG.module.named_loader import NamedLoader
+from dNG.plugins.hook import Hook
 
 def after_apply_schema(params, last_return = None):
 #
@@ -40,14 +40,14 @@ Called for "dNG.pas.Database.applySchema.after"
 :param last_return: The return value from the last hook called.
 
 :return: (mixed) Return value
-:since:  v0.1.00
+:since:  v0.2.00
 	"""
 
-	user_profile_class = NamedLoader.get_class("dNG.pas.data.user.Profile")
+	user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
 
 	if (issubclass(user_profile_class, Profile)):
 	#
-		db_user_profile_class = NamedLoader.get_class("dNG.pas.database.instances.UserProfile")
+		db_user_profile_class = NamedLoader.get_class("dNG.database.instances.UserProfile")
 		Schema.apply_version(db_user_profile_class)
 
 		cli = InteractiveCli.get_instance()
@@ -67,13 +67,13 @@ def _ensure_administrative_user_account():
 Checks if at least one active administrative user profile exists. Creates
 one if this is not the case.
 
-:since: v0.1.00
+:since: v0.2.00
 	"""
 
 	cli = InteractiveCli.get_instance()
 	cli.output_info("Validating administrative account ...")
 
-	user_profile_class = NamedLoader.get_class("dNG.pas.data.user.Profile")
+	user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
 
 	if (next(user_profile_class.load_list(limit = 1, _type = "ad"), None) is not None): cli.output_info("Administrative account is available")
 	else:
@@ -118,11 +118,11 @@ Load and register all SQLAlchemy objects to generate database tables.
 :param last_return: The return value from the last hook called.
 
 :return: (mixed) Return value
-:since:  v0.1.00
+:since:  v0.2.00
 	"""
 
-	user_profile_class = NamedLoader.get_class("dNG.pas.data.user.Profile")
-	if (issubclass(user_profile_class, Profile)): NamedLoader.get_class("dNG.pas.database.instances.UserProfile")
+	user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
+	if (issubclass(user_profile_class, Profile)): NamedLoader.get_class("dNG.database.instances.UserProfile")
 
 	return last_return
 #
@@ -132,7 +132,7 @@ def register_plugin():
 	"""
 Register plugin hooks.
 
-:since: v0.1.00
+:since: v0.2.00
 	"""
 
 	Hook.register("dNG.pas.Database.applySchema.after", after_apply_schema)
@@ -144,7 +144,7 @@ def unregister_plugin():
 	"""
 Unregister plugin hooks.
 
-:since: v0.1.00
+:since: v0.2.00
 	"""
 
 	Hook.unregister("dNG.pas.Database.applySchema.after", after_apply_schema)

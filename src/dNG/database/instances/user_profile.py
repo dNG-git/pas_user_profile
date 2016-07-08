@@ -24,7 +24,8 @@ from sqlalchemy.types import BOOLEAN, CHAR, INT, FLOAT, TEXT, SMALLINT, VARCHAR
 from time import time
 from uuid import uuid4 as uuid
 
-from dNG.pas.database.types.date_time import DateTime
+from dNG.database.types.date_time import DateTime
+
 from .abstract import Abstract
 from .acl_entry import AclEntry
 
@@ -33,11 +34,11 @@ class UserProfile(Abstract):
 	"""
 SQLAlchemy database instance for Profile.
 
-:author:     direct Netware Group
+:author:     direct Netware Group et al.
 :copyright:  (C) direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: user_profile
-:since:      v0.1.00
+:since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
@@ -48,7 +49,7 @@ SQLAlchemy database instance for Profile.
 	"""
 SQLAlchemy table name
 	"""
-	db_instance_class = "dNG.pas.data.user.Profile"
+	db_instance_class = "dNG.data.user.Profile"
 	"""
 Encapsulating SQLAlchemy database instance class name
 	"""
@@ -168,7 +169,7 @@ Relation to AclGroup
 		"""
 Constructor __init__(UserProfile)
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		Abstract.__init__(self, *args, **kwargs)

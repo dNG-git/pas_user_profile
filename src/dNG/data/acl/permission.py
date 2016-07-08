@@ -18,9 +18,9 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
-from dNG.pas.data.binary import Binary
-from dNG.pas.database.instance import Instance
-from dNG.pas.database.instances.permission import Permission as _DbPermission
+from dNG.data.binary import Binary
+from dNG.database.instance import Instance
+from dNG.database.instances.permission import Permission as _DbPermission
 
 class Permission(Instance):
 #
@@ -28,11 +28,11 @@ class Permission(Instance):
 The "Permission" class provides a relationship to a list of owners for the
 given entry ID.
 
-:author:     direct Netware Group
+:author:     direct Netware Group et al.
 :copyright:  direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: user_profile
-:since:      v0.1.02
+:since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
@@ -47,7 +47,7 @@ SQLAlchemy database instance class to initialize for new instances.
 		"""
 Sets values given as keyword arguments to this method.
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		with self:

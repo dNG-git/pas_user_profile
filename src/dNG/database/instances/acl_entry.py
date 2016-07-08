@@ -18,33 +18,36 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 #echo(__FILEPATH__)#
 """
 
-from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.types import BOOLEAN, VARCHAR
+from sqlalchemy.orm import relationship
+from sqlalchemy.schema import Column
+from sqlalchemy.types import CHAR, VARCHAR
 from uuid import uuid4 as uuid
 
 from .abstract import Abstract
+from .permission import Permission
 
-class Permission(Abstract):
+class AclEntry(Abstract):
 #
 	"""
-"TextEntry" contains the database representation for a text entry.
+An "AclEntry" provides the database representation of an access control list
+(ACL) entry.
 
-:author:     direct Netware Group
+:author:     direct Netware Group et al.
 :copyright:  direct Netware Group - All rights reserved
 :package:    pas
 :subpackage: user_profile
-:since:      v0.1.02
+:since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
 	"""
 
 	# pylint: disable=invalid-name
 
-	__tablename__ = "{0}_permission".format(Abstract.get_table_prefix())
+	__tablename__ = "{0}_acl".format(Abstract.get_table_prefix())
 	"""
 SQLAlchemy table name
 	"""
-	db_instance_class = "dNG.pas.data.acl.Permission"
+	db_instance_class = "dNG.data.acl.Entry"
 	"""
 Encapsulating SQLAlchemy database instance class name
 	"""
@@ -55,27 +58,32 @@ Database schema version
 
 	id = Column(VARCHAR(32), primary_key = True)
 	"""
-permission.id
+acl.id
 	"""
-	id_acl_entry = Column(VARCHAR(32), ForeignKey("{0}_acl.id".format(Abstract.get_table_prefix())), index = True, nullable = False)
+	owned_id = Column(VARCHAR(32), index = True, nullable = False)
 	"""
-permission.id_acl_entry
+acl.owned_id
 	"""
-	name = Column(VARCHAR(255))
+	owner_id = Column(VARCHAR(32), index = True, nullable = False)
 	"""
-permission.name
+acl.owner_id
 	"""
-	permitted = Column(BOOLEAN)
+	owner_type = Column(CHAR(1), server_default = "u", nullable = False)
 	"""
-permission.permitted
+acl.owner_type
+	"""
+
+	rel_permissions = relationship(Permission)
+	"""
+Relation to Permission
 	"""
 
 	def __init__(self, *args, **kwargs):
 	#
 		"""
-Constructor __init__(Permission)
+Constructor __init__(AclEntry)
 
-:since: v0.1.00
+:since: v0.2.00
 		"""
 
 		Abstract.__init__(self, *args, **kwargs)
