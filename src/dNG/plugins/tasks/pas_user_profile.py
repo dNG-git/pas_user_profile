@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 direct PAS
@@ -26,8 +25,7 @@ from dNG.plugins.hook import Hook
 from dNG.runtime.value_exception import ValueException
 
 def delete(params, last_return = None):
-#
-	"""
+    """
 Called for "dNG.pas.user.Profile.delete"
 
 :param params: Parameter specified
@@ -35,48 +33,41 @@ Called for "dNG.pas.user.Profile.delete"
 
 :return: (mixed) Return value
 :since:  v0.2.00
-	"""
+    """
 
-	# pylint: disable=star-args
+    # pylint: disable=star-args
 
-	if ("username" not in params): raise ValueException("Missing required argument")
-	else:
-	#
-		user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
+    if ("username" not in params): raise ValueException("Missing required argument")
+    else:
+        user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
 
-		try:
-		#
-			user_profile = user_profile_class.load_username(params['username'])
+        try:
+            user_profile = user_profile_class.load_username(params['username'])
 
-			Hook.call("dNG.pas.user.Profile.onDelete", user_profile_id = user_profile.get_id())
-			user_profile.delete()
-		#
-		except NothingMatchedException: pass
-	#
+            Hook.call("dNG.pas.user.Profile.onDelete", user_profile_id = user_profile.get_id())
+            user_profile.delete()
+        except NothingMatchedException: pass
+    #
 
-	return last_return
+    return last_return
 #
 
 def register_plugin():
-#
-	"""
+    """
 Register plugin hooks.
 
 :since: v0.2.00
-	"""
+    """
 
-	Hook.register("dNG.pas.user.Profile.delete", delete)
+    Hook.register("dNG.pas.user.Profile.delete", delete)
 #
 
 def unregister_plugin():
-#
-	"""
+    """
 Unregister plugin hooks.
 
 :since: v0.2.00
-	"""
+    """
 
-	Hook.unregister("dNG.pas.user.Profile.delete", delete)
+    Hook.unregister("dNG.pas.user.Profile.delete", delete)
 #
-
-##j## EOF

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 direct PAS
@@ -32,8 +31,7 @@ from dNG.module.named_loader import NamedLoader
 from dNG.plugins.hook import Hook
 
 def after_apply_schema(params, last_return = None):
-#
-	"""
+    """
 Called for "dNG.pas.Database.applySchema.after"
 
 :param params: Parameter specified
@@ -41,77 +39,73 @@ Called for "dNG.pas.Database.applySchema.after"
 
 :return: (mixed) Return value
 :since:  v0.2.00
-	"""
+    """
 
-	user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
+    user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
 
-	if (issubclass(user_profile_class, Profile)):
-	#
-		db_user_profile_class = NamedLoader.get_class("dNG.database.instances.UserProfile")
-		Schema.apply_version(db_user_profile_class)
+    if (issubclass(user_profile_class, Profile)):
+        db_user_profile_class = NamedLoader.get_class("dNG.database.instances.UserProfile")
+        Schema.apply_version(db_user_profile_class)
 
-		cli = InteractiveCli.get_instance()
+        cli = InteractiveCli.get_instance()
 
-		if (isinstance(cli, InteractiveCli)
-		    and hasattr(cli, "is_cli_setup")
-		    and cli.is_cli_setup()
-		   ): _ensure_administrative_user_account()
-	#
+        if (isinstance(cli, InteractiveCli)
+            and hasattr(cli, "is_cli_setup")
+            and cli.is_cli_setup()
+           ): _ensure_administrative_user_account()
+    #
 
-	return last_return
+    return last_return
 #
 
 def _ensure_administrative_user_account():
-#
-	"""
+    """
 Checks if at least one active administrative user profile exists. Creates
 one if this is not the case.
 
 :since: v0.2.00
-	"""
+    """
 
-	cli = InteractiveCli.get_instance()
-	cli.output_info("Validating administrative account ...")
+    cli = InteractiveCli.get_instance()
+    cli.output_info("Validating administrative account ...")
 
-	user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
+    user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
 
-	if (next(user_profile_class.load_list(limit = 1, _type = "ad"), None) is not None): cli.output_info("Administrative account is available")
-	else:
-	#
-		cli.output_info("No valid administrative account found")
+    if (next(user_profile_class.load_list(limit = 1, _type = "ad"), None) is not None): cli.output_info("Administrative account is available")
+    else:
+        cli.output_info("No valid administrative account found")
 
-		Settings.read_file("{0}/settings/pas_user_profile.json".format(Settings.get("path_data")))
-		password = "".join(choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for _ in range(20))
-		password_encrypted = Tmd5.password_hash(password, Settings.get("pas_user_profile_password_salt"), "root")
+        Settings.read_file("{0}/settings/pas_user_profile.json".format(Settings.get("path_data")))
+        password = "".join(choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for _ in range(20))
+        password_encrypted = Tmd5.password_hash(password, Settings.get("pas_user_profile_password_salt"), "root")
 
-		cli.output("")
-		cli.output("A new default account will be generated.")
-		cli.output("")
-		cli.output("---------------------------------")
-		cli.output("User name: root")
-		cli.output("   e-mail: invalid@domain.invalid")
-		cli.output(" Password: {0}", password)
-		cli.output("---------------------------------")
-		cli.output("")
-		cli.output("Please change this account as soon as possible.")
-		cli.output("")
+        cli.output("")
+        cli.output("A new default account will be generated.")
+        cli.output("")
+        cli.output("---------------------------------")
+        cli.output("User name: root")
+        cli.output("   e-mail: invalid@domain.invalid")
+        cli.output(" Password: {0}", password)
+        cli.output("---------------------------------")
+        cli.output("")
+        cli.output("Please change this account as soon as possible.")
+        cli.output("")
 
-		user_profile = user_profile_class()
+        user_profile = user_profile_class()
 
-		user_profile.set_data_attributes(type = user_profile_class.get_type_int("ad"),
-		                                 name = "root",
-		                                 password = password_encrypted,
-		                                 locked = False,
-		                                 email = "invalid@domain.invalid"
-		                                )
+        user_profile.set_data_attributes(type = user_profile_class.get_type_int("ad"),
+                                         name = "root",
+                                         password = password_encrypted,
+                                         locked = False,
+                                         email = "invalid@domain.invalid"
+                                        )
 
-		user_profile.save()
-	#
+        user_profile.save()
+    #
 #
 
 def load_all(params, last_return = None):
-#
-	"""
+    """
 Load and register all SQLAlchemy objects to generate database tables.
 
 :param params: Parameter specified
@@ -119,36 +113,32 @@ Load and register all SQLAlchemy objects to generate database tables.
 
 :return: (mixed) Return value
 :since:  v0.2.00
-	"""
+    """
 
-	user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
-	if (issubclass(user_profile_class, Profile)): NamedLoader.get_class("dNG.database.instances.UserProfile")
+    user_profile_class = NamedLoader.get_class("dNG.data.user.Profile")
+    if (issubclass(user_profile_class, Profile)): NamedLoader.get_class("dNG.database.instances.UserProfile")
 
-	return last_return
+    return last_return
 #
 
 def register_plugin():
-#
-	"""
+    """
 Register plugin hooks.
 
 :since: v0.2.00
-	"""
+    """
 
-	Hook.register("dNG.pas.Database.applySchema.after", after_apply_schema)
-	Hook.register("dNG.pas.Database.loadAll", load_all)
+    Hook.register("dNG.pas.Database.applySchema.after", after_apply_schema)
+    Hook.register("dNG.pas.Database.loadAll", load_all)
 #
 
 def unregister_plugin():
-#
-	"""
+    """
 Unregister plugin hooks.
 
 :since: v0.2.00
-	"""
+    """
 
-	Hook.unregister("dNG.pas.Database.applySchema.after", after_apply_schema)
-	Hook.unregister("dNG.pas.Database.loadAll", load_all)
+    Hook.unregister("dNG.pas.Database.applySchema.after", after_apply_schema)
+    Hook.unregister("dNG.pas.Database.loadAll", load_all)
 #
-
-##j## EOF

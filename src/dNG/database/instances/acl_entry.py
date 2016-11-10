@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-##j## BOF
 
 """
 direct PAS
@@ -27,8 +26,7 @@ from .abstract import Abstract
 from .permission import Permission
 
 class AclEntry(Abstract):
-#
-	"""
+    """
 An "AclEntry" provides the database representation of an access control list
 (ACL) entry.
 
@@ -39,56 +37,53 @@ An "AclEntry" provides the database representation of an access control list
 :since:      v0.2.00
 :license:    https://www.direct-netware.de/redirect?licenses;mpl2
              Mozilla Public License, v. 2.0
-	"""
+    """
 
-	# pylint: disable=invalid-name
+    # pylint: disable=invalid-name
 
-	__tablename__ = "{0}_acl".format(Abstract.get_table_prefix())
-	"""
+    __tablename__ = "{0}_acl".format(Abstract.get_table_prefix())
+    """
 SQLAlchemy table name
-	"""
-	db_instance_class = "dNG.data.acl.Entry"
-	"""
+    """
+    db_instance_class = "dNG.data.acl.Entry"
+    """
 Encapsulating SQLAlchemy database instance class name
-	"""
-	db_schema_version = 1
-	"""
+    """
+    db_schema_version = 1
+    """
 Database schema version
-	"""
+    """
 
-	id = Column(VARCHAR(32), primary_key = True)
-	"""
+    id = Column(VARCHAR(32), primary_key = True)
+    """
 acl.id
-	"""
-	owned_id = Column(VARCHAR(32), index = True, nullable = False)
-	"""
+    """
+    owned_id = Column(VARCHAR(32), index = True, nullable = False)
+    """
 acl.owned_id
-	"""
-	owner_id = Column(VARCHAR(32), index = True, nullable = False)
-	"""
+    """
+    owner_id = Column(VARCHAR(32), index = True, nullable = False)
+    """
 acl.owner_id
-	"""
-	owner_type = Column(CHAR(1), server_default = "u", nullable = False)
-	"""
+    """
+    owner_type = Column(CHAR(1), server_default = "u", nullable = False)
+    """
 acl.owner_type
-	"""
+    """
 
-	rel_permissions = relationship(Permission)
-	"""
+    rel_permissions = relationship(Permission)
+    """
 Relation to Permission
-	"""
+    """
 
-	def __init__(self, *args, **kwargs):
-	#
-		"""
+    def __init__(self, *args, **kwargs):
+        """
 Constructor __init__(AclEntry)
 
 :since: v0.2.00
-		"""
+        """
 
-		Abstract.__init__(self, *args, **kwargs)
-		if (self.id is None): self.id = uuid().hex
-	#
+        Abstract.__init__(self, *args, **kwargs)
+        if (self.id is None): self.id = uuid().hex
+    #
 #
-
-##j## EOF
