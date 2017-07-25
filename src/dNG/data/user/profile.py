@@ -19,17 +19,16 @@ https://www.direct-netware.de/redirect?licenses;mpl2
 
 from dNG.data.binary import Binary
 from dNG.data.settings import Settings
-from dNG.data.text.tmd5 import Tmd5
 from dNG.database.connection import Connection
 from dNG.database.instance import Instance
 from dNG.database.instances.user_profile import UserProfile as _DbUserProfile
 from dNG.database.lockable_mixin import LockableMixin
 from dNG.database.nothing_matched_exception import NothingMatchedException
-from dNG.runtime.value_exception import ValueException
 
 from .abstract_profile import AbstractProfile
+from .password_generators_mixin import PasswordGeneratorsMixin
 
-class Profile(Instance, LockableMixin, AbstractProfile):
+class Profile(Instance, LockableMixin, PasswordGeneratorsMixin, AbstractProfile):
     """
 "Profile" contains user specific data used for the Python Application
 Services. Logging in and additional details may come from external sources.
@@ -57,9 +56,10 @@ Constructor __init__(Profile)
 
         if (db_instance is None): db_instance = _DbUserProfile()
 
+        AbstractProfile.__init__(self)
         Instance.__init__(self, db_instance)
         LockableMixin.__init__(self)
-        AbstractProfile.__init__(self)
+        PasswordGeneratorsMixin.__init__(self)
 
         self.db_id = (None if (db_instance is None) else self.get_id())
         """
@@ -93,28 +93,6 @@ Checks if the user has been deleted.
 
         profile_data = self.get_data_attributes("deleted")
         return profile_data['deleted']
-    #
-
-    def is_password_valid(self, password):
-        """
-Checks if the password is correct.
-
-:param password: User profile password
-
-:return: (bool) True if valid
-:since:  v0.2.00
-        """
-
-        salt = Settings.get("pas_user_profile_password_salt")
-        if (salt is None): raise ValueException("User profile password salt is not defined")
-
-        with self:
-            hashed_password = Tmd5.password_hash(password, Settings.get("pas_user_profile_password_salt"), self.local.db_instance.name)
-
-            return (self.local.db_instance.type != Profile.TYPE_EXTERNAL_VERIFIED_MEMBER
-                    and hashed_password == self.local.db_instance.password
-                   )
-        #
     #
 
     def is_reloadable(self):
@@ -242,24 +220,6 @@ Sets values given as keyword arguments to this method.
             if ("lastvisit_time" in kwargs): self.local.db_instance.lastvisit_time = int(kwargs['lastvisit_time'])
             if ("rating" in kwargs): self.local.db_instance.rating = kwargs['rating']
             if ("timezone" in kwargs): self.local.db_instance.timezone = kwargs['timezone']
-        #
-    #
-
-    def set_password(self, password):
-        """
-Sets the profile password.
-
-:param password: User profile password
-
-:since: v0.2.00
-        """
-
-        salt = Settings.get("pas_user_profile_password_salt")
-        if (salt is None): raise ValueException("User profile password salt is not defined")
-
-        with self:
-            hashed_password = Tmd5.password_hash(password, Settings.get("pas_user_profile_password_salt"), self.local.db_instance.name)
-            self.local.db_instance.password = hashed_password
         #
     #
 

@@ -51,7 +51,7 @@ SQLAlchemy table name
     """
 Encapsulating SQLAlchemy database instance class name
     """
-    db_schema_version = 3
+    db_schema_version = 4
     """
 Database schema version
     """
@@ -84,7 +84,11 @@ user_profile.locked
     """
 user_profile.name
     """
-    password = Column(CHAR(96))
+    password_type = Column(SMALLINT, server_default = "2", nullable = False)
+    """
+user_profile.password_type
+    """
+    password = Column(VARCHAR(255))
     """
 user_profile.password
     """
@@ -116,7 +120,7 @@ user_profile.credits
     """
 user_profile.title
     """
-    avatar = Column(VARCHAR(32))
+    avatar = Column(VARCHAR(100))
     """
 user_profile.avatar
     """
